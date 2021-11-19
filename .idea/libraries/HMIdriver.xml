@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="HMIdriver">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/HMIdriver.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/HMIdriver.jar!/" />
+    </SOURCES>
+  </library>
+</component>
