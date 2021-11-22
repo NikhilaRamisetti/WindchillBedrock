@@ -99,6 +99,7 @@ public class ExcelReader {
         fos.close();
     }
 
+
     public String WriteData(String CompletePath, String sheetName, Integer rownumber, String Columnname, String productno) throws IOException {
         FileInputStream inputStream;
         FileOutputStream fos;
@@ -166,7 +167,9 @@ public class ExcelReader {
                 return "";
         }
     }
-
+    public int getRowCount(){
+        return worksheet.getLastRowNum();
+    }
     public List<String> getRowData(int rowIndex, int columnStartIndex) {
         Row row = worksheet.getRow(rowIndex);
         List<String> rowData = new ArrayList<String>();

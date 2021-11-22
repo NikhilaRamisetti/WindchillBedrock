@@ -3,7 +3,7 @@
 
     <test thread-count="1" name="Pre-Requisite" verbose="2" preserve-order="true">
         <classes>
-            <class name="airbus.ReportFactory">
+            <class name="Windchill.ReportFactory">
                 <methods>
                     <include name="ReportProcess"></include>
                 </methods>
@@ -12,7 +12,7 @@
     </test>
 
 
-    <test thread-count="1" name="Pre-Requisite" verbose="2" preserve-order="true">
+    <test thread-count="1" name="Pre-Requisite2" verbose="2" preserve-order="true">
         <classes>
             <class name="Windchill.ManageWindchillPart">
                

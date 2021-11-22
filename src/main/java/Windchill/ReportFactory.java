@@ -13,26 +13,36 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public class ReportFactory {
-    private File directory =  new File("");
-    private String UserDirectory = directory.getCanonicalPath();
+
+    private static File directory =  new File("");;
+    private static String UserDirectory;
+
+    static {
+        try {
+            UserDirectory = directory.getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public static ExtentReports getInstance() throws IOException {
         ExtentReports extent;
       //  String Reportname = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-        File directory =  new File("");
-        String UserDirectory = directory.getCanonicalPath();
-        extent = new ExtentReports (System.getProperty(UserDirectory) +"/test-output/BedrockTestAutomationReport.html",false);
+
+        extent = new ExtentReports (UserDirectory +"/test-output/BedrockTestAutomationReport.html",false);
         extent
                 .addSystemInfo("Host Name", "Windchill")
                 .addSystemInfo("Environment", "Bedrock")
                 .addSystemInfo("User Name", "Nikhila");
-         extent.loadConfig(new File(System.getProperty(UserDirectory)+"extent-config.xml"));
+         extent.loadConfig(new File(UserDirectory+"/extent-config.xml"));
         return extent;
     }
 
     @Test
     public void DelExistingRep(){
         Path path
-                = Paths.get(System.getProperty(UserDirectory)+"/test-output/BedrockTestAutomationReport.html");
+                = Paths.get(UserDirectory+"/test-output/BedrockTestAutomationReport.html");
         try {
 
             Files.deleteIfExists(path);
@@ -45,8 +55,9 @@ public class ReportFactory {
     public void ReportProcess() throws IOException {
         try {
             {
-                File file = new File(System.getProperty(UserDirectory) + "/test-output/BedrockTestAutomationReport.html");
-                Path path = Paths.get(System.getProperty(UserDirectory) + "/test-output/BedrockTestAutomationReport.html");
+                File file = new File(UserDirectory + "/test-output/BedrockTestAutomationReport.html");
+                Path path = Paths.get(UserDirectory + "/test-output/BedrockTestAutomationReport.html");
+                System.out.println(path);
                 BasicFileAttributes attr;
                 attr = Files.readAttributes(path, BasicFileAttributes.class);
                 ZonedDateTime datetime=attr.creationTime().toInstant().atZone(ZoneId.systemDefault());
@@ -60,7 +71,7 @@ public class ReportFactory {
                 String foldername=replaceString.substring(0,10);
                 //System.out.println("lasteks :"+lastEks);
                 //System.out.println("sb :"+b);
-                String ReportArchivePath=System.getProperty(UserDirectory) + "/ReportArchive/" + foldername;
+                String ReportArchivePath=UserDirectory + "/ReportArchive/" + foldername;
                 File ReportArchivePath1 = new File(ReportArchivePath);
                 if (!ReportArchivePath1.exists()) {
                    //System.out.print("No Folder");
