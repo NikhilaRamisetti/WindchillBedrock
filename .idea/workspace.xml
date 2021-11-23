@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="856f6281-ff68-4509-b7b1-f4b99b16f0ec" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/Windchill/ManageWindchillPart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Windchill/ManageWindchillPart.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test-output/BedrockTestAutomationReport.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/testng.xml" beforeDir="false" afterPath="$PROJECT_DIR$/testng.xml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1c7oesBQiXgA1dU1Orm5CO3BB8K" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../WindchillBedrockAutomation" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.6304348" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="xpath.settings" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ramisetti.nikhila\Documents\WINDCHILL_Bedrock\bedrockframework-master@7ed5edae5d2" />
+      <recent name="C:\Users\dhananjay.pawar\Desktop\project" />
+      <recent name="C:\Users\dhananjay.pawar\Desktop\project\src\main\java" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="Windchill" />
+      <recent name="Functional_Library.CATIA_3dexperience" />
+      <recent name="airbus.Demo" />
+      <recent name="WebAppExample" />
+      <recent name="airbus.Enovia_UseCases" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\dhananjay.pawar\Documents\bedrockframework\GlobalSettings" />
+      <recent name="C:\Users\dhananjay.pawar\Documents\bedrockframework\src\main\java" />
+      <recent name="C:\Users\dhananjay.pawar\Documents\bedrockframework\src\main\java\airbus\Enovia_UseCases" />
+      <recent name="C:\Users\dhananjay.pawar\Desktop\BedROCK_files\GIT_repository\Bedrock_project\PixelGraphics\Repository_A" />
+      <recent name="C:\Users\dhananjay.pawar\Desktop\BedROCK_files\GIT_repository\Bedrock_project\src\main\java\airbus" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="TestNG.C:/Users/ramisetti.nikhila/WindchillBedrock/testng.xml">
+    <configuration name="HMIDriverProject.jar" type="JarApplication">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/HMIDriverProject.jar" />
+      <method v="2" />
+    </configuration>
+    <configuration name="BOM_Management_Testcase" type="TestNG" nameIsGenerated="true">
+      <module name="Bedrock" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="airbus.Enovia_UseCases.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="airbus.Enovia_UseCases" />
+      <option name="MAIN_CLASS_NAME" value="airbus.Enovia_UseCases.BOM_Management_Testcase" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="C:/Users/ramisetti.nikhila/WindchillBedrock/testng.xml" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="Bedrock" />
+      <option name="SUITE_NAME" value="$PROJECT_DIR$/testng.xml" />
+      <option name="TEST_OBJECT" value="SUITE" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ManageWindchillPart" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="Bedrock" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="airbus.Delmia_Usecases.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SUITE_NAME" value="" />
+      <option name="PACKAGE_NAME" value="Windchill" />
+      <option name="MAIN_CLASS_NAME" value="Windchill.ManageWindchillPart" />
+      <option name="GROUP_NAME" value="" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="PARAMETERS" value="" />
+      <option name="OUTPUT_DIRECTORY" value="" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="PROPERTIES_FILE" value="" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ManageWindchillPart" type="TestNG" nameIsGenerated="true">
+      <module name="Bedrock" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Windchill.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SUITE_NAME" value="" />
+      <option name="PACKAGE_NAME" value="Windchill" />
+      <option name="MAIN_CLASS_NAME" value="Windchill.ManageWindchillPart" />
+      <option name="METHOD_NAME" value="LaunchWindchillBrowser" />
+      <option name="GROUP_NAME" value="" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="PARAMETERS" value="" />
+      <option name="OUTPUT_DIRECTORY" value="" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="PROPERTIES_FILE" value="" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ManageWindchillPart." type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="Bedrock" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Windchill.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SUITE_NAME" value="" />
+      <option name="PACKAGE_NAME" value="Windchill" />
+      <option name="MAIN_CLASS_NAME" value="Windchill.ManageWindchillPart" />
+      <option name="METHOD_NAME" value="" />
+      <option name="GROUP_NAME" value="" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <option name="PARAMETERS" value="" />
+      <option name="OUTPUT_DIRECTORY" value="" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="PROPERTIES_FILE" value="" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PPR_E2E_DatasetCreation.EViewCreation" type="TestNG" temporary="true" nameIsGenerated="true">
+      <module name="Bedrock" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="airbus.Delmia_Usecases.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="airbus.Delmia_Usecases" />
+      <option name="MAIN_CLASS_NAME" value="airbus.Delmia_Usecases.PPR_E2E_DatasetCreation" />
+      <option name="METHOD_NAME" value="EViewCreation" />
+      <option name="TEST_OBJECT" value="METHOD" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JAR Application.HMIDriverProject.jar" />
+      <item itemvalue="TestNG.BOM_Management_Testcase" />
+      <item itemvalue="TestNG.ManageWindchillPart" />
+      <item itemvalue="TestNG.PPR_E2E_DatasetCreation.EViewCreation" />
+      <item itemvalue="TestNG.ManageWindchillPart." />
+      <item itemvalue="TestNG.C:/Users/ramisetti.nikhila/WindchillBedrock/testng.xml" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="TestNG.C:/Users/ramisetti.nikhila/WindchillBedrock/testng.xml" />
+        <item itemvalue="TestNG.ManageWindchillPart" />
+        <item itemvalue="TestNG.ManageWindchillPart." />
+        <item itemvalue="TestNG.PPR_E2E_DatasetCreation.EViewCreation" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="856f6281-ff68-4509-b7b1-f4b99b16f0ec" name="Default Changelist" comment="" />
+      <created>1589889090745</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1589889090745</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="515" y="267" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1597753258474">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="515" y="267" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.1536.824@0.0.1536.824" timestamp="1597753258474" />
+    <state x="257" y="0" key="CommitChangelistDialog2" timestamp="1599102809395">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="257" y="0" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1599102809395" />
+    <state x="473" y="153" key="FileChooserDialogImpl" timestamp="1594291614356">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="473" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1594291614356" />
+    <state width="1493" height="129" key="GridCell.Tab.0.bottom" timestamp="1599231961242">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="129" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1599231961242" />
+    <state width="1877" height="178" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597677291525" />
+    <state width="1493" height="129" key="GridCell.Tab.0.center" timestamp="1599231961242">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="129" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1599231961242" />
+    <state width="1877" height="178" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597677291525" />
+    <state width="1493" height="129" key="GridCell.Tab.0.left" timestamp="1599231961242">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="129" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1599231961242" />
+    <state width="1877" height="178" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597677291525" />
+    <state width="1493" height="129" key="GridCell.Tab.0.right" timestamp="1599231961242">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="129" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1599231961242" />
+    <state width="1877" height="178" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597677291525" />
+    <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1597647911214">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="261" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1597647911214" />
+    <state width="1493" height="261" key="GridCell.Tab.1.center" timestamp="1597647911214">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="261" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1597647911214" />
+    <state width="1493" height="261" key="GridCell.Tab.1.left" timestamp="1597647911214">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="261" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1597647911214" />
+    <state width="1493" height="261" key="GridCell.Tab.1.right" timestamp="1597647911214">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="261" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1597647911214" />
+    <state x="349" y="147" key="IDE.errors.dialog" timestamp="1593705101300">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="349" y="147" key="IDE.errors.dialog/0.0.1536.824@0.0.1536.824" timestamp="1593705101300" />
+    <state x="299" y="67" key="Maven.ArtifactSearchDialog" timestamp="1593752204209">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="299" y="67" key="Maven.ArtifactSearchDialog/0.0.1536.824@0.0.1536.824" timestamp="1593752204209" />
+    <state x="231" y="0" width="965" height="659" key="SettingsEditor" timestamp="1597753227559">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="231" y="0" width="1206" height="824" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1597753227559" />
+    <state x="231" y="0" width="965" height="659" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1594203161498" />
+    <state x="777" y="338" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1592376392348">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="777" y="338" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1536.824@0.0.1536.824" timestamp="1592376392348" />
+    <state x="475" y="169" key="refactoring.ChangeSignatureDialog" timestamp="1594030796645">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="475" y="169" key="refactoring.ChangeSignatureDialog/0.0.1536.824@0.0.1536.824" timestamp="1594030796645" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1594295977038">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1594295977038" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1597826927591">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1597826927591" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/project$.ic" NAME=" Coverage Results" MODIFIED="1591179736094" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/project$Process_planning_experience3d.ic" NAME="Process_planning.experience3d Coverage Results" MODIFIED="1591786130445" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>airbus.*</FILTER>
+    </SUITE>
+  </component>
+</project>

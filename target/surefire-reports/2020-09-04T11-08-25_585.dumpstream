@@ -1,0 +1,15 @@
+# Created at 2020-09-04T11:08:32.465
+WARNING: An illegal reflective access operation has occurred
+
+# Created at 2020-09-04T11:08:32.467
+WARNING: Illegal reflective access by org.dom4j.io.SAXContentHandler (file:/C:/Users/dhananjay.pawar/.m2/repository/CommonJar/IXO.Bedrock/2.0/IXO.Bedrock-2.0.jar) to method com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser$LocatorProxy.getEncoding()
+
+# Created at 2020-09-04T11:08:32.469
+WARNING: Please consider reporting this to the maintainers of org.dom4j.io.SAXContentHandler
+
+# Created at 2020-09-04T11:08:32.471
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+
+# Created at 2020-09-04T11:08:32.477
+WARNING: All illegal access operations will be denied in a future release
+
