@@ -151,7 +151,11 @@ public class ManageWindchillPart {
             List<String> PartDetails= excelReader.getRowData(i,0);
             String PartName = new String(PartDetails.get(0));
             System.out.println(PartName);
-            driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/newpart.gif\");']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//div[@id='folderbrowser_PDM.toolBar']//button[text()='Actions']")).click();
+            driver.findElement(By.xpath("//span[text()='New']")).click();
+            driver.findElement(By.xpath("//span[text()='New Part']")).click();
+            Thread.sleep(2000);
             String parent = driver.getWindowHandle();
             Set<String> windows = driver.getWindowHandles();
             System.out.println(windows);
@@ -244,7 +248,6 @@ public class ManageWindchillPart {
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
-
     @AfterTest
     public void closebrowser() {
         if (driver != null) {
@@ -252,7 +255,7 @@ public class ManageWindchillPart {
             driver.quit();
         }
     }
-    
+
     @AfterMethod
     public void getResult(ITestResult result) throws Exception {
         if (result.getStatus() == ITestResult.FAILURE) {
