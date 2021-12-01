@@ -5,10 +5,7 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -55,6 +52,7 @@ public class ManageWindchillPart {
     ExtentReports extent;
     ExtentTest logger;
     String DefaultPart = "Test Part1";
+    String DefaultPartVersion= "A.3";
 
     
     public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
@@ -242,7 +240,22 @@ public class ManageWindchillPart {
 
     public void ViewPartInfoPage(String Part){
         String partName = Part;
-        driver.findElement(By.xpath("//a[text()='" + partName + "']")).click();
+        try {
+            List<WebElement> Parts= driver.findElements(By.xpath("//td//a(text(),'" + partName + "')]"));
+            for(WebElement part: Parts) {
+                if(driver.findElements(By.xpath("//td//a[contains(text(),'" + partName + "')]/../../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-version ']//div[contains(text(),'" + DefaultPartVersion + "')]")).size() !=0){
+                    part.click();
+                }
+                else{
+                    logger.log(LogStatus.ERROR, "Re-Check the version of the part, It doesnt exist");
+                }
+            }
+
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
         implicitWait(5);
     }
     public void implicitWait(int seconds){

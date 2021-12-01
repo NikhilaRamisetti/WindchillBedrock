@@ -98,7 +98,6 @@ public class ContentFileManagement {
         System.out.println("Success: Launched Windchill Browser");
         logger.log(LogStatus.PASS, "Test Case is Passed");
     }
-    /*
     @Test(priority=2)
     public void addSecondaryContent() throws InterruptedException {
         logger = extent.startTest("Add Secondary Content");
@@ -139,7 +138,6 @@ public class ContentFileManagement {
 
         logger.log(LogStatus.PASS, "Test Case is Passed");
     }
-*/
     @Test(priority=3)
     public void downloadContent() {
         logger = extent.startTest("Download content file");
