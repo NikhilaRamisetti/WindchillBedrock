@@ -1,8 +1,14 @@
 package Windchill;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -42,6 +48,15 @@ public class commonFunctions {
     public static void closeWindowHandle(WebDriver driver, String parent) throws InterruptedException {
         driver.switchTo().window(parent);
         Thread.sleep(2000);
+    }
+    public static String getScreenshot(WebDriver driver, String screenshotName, String FolderName, String RootFolder) throws Exception {
+        String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
+        TakesScreenshot ts = (TakesScreenshot) driver;
+        File source = ts.getScreenshotAs(OutputType.FILE);
+        String destination = RootFolder + FolderName + screenshotName + dateName + ".png";
+        File finalDestination = new File(destination);
+        FileUtils.copyFile(source, finalDestination);
+        return destination;
     }
     /*
     public static void runTest(Runnable code, ExtentTest logger) {
