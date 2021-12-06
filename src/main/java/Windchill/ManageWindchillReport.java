@@ -9,7 +9,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-import org.openqa.selenium.JavascriptExecutor;
+
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ManageWindchillReport {
@@ -100,14 +99,14 @@ public class ManageWindchillReport {
     @Test(priority=2)
     public void createReport() throws InterruptedException {
         logger = extent.startTest("Creating a Report");
-        viewProductMenuSection("Utilities");
+        commonFunctions.viewProductMenuSection("Utilities", driver, DemoReportDetails.get(0));
         Thread.sleep(2000);
         try {
             driver.findElement(By.xpath("//a[contains(text(),'Report Management')]")).click();
             Thread.sleep(2000);
             driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
             Thread.sleep(2000);
-            if (openNewWindowHandles("Query Builder")) {
+            if (commonFunctions.openNewWindowHandles("Query Builder", driver)) {
                 implicitWait(10);
                 driver.findElement(By.xpath("//input[@id='reportTemplateName']")).click();
                 driver.findElement(By.xpath("//input[@id='reportTemplateName']")).sendKeys(DemoReportDetails.get(1));
@@ -137,7 +136,7 @@ public class ManageWindchillReport {
                 Thread.sleep(1000);
                 driver.findElement(By.xpath("//button[text()='Close']")).click();
                 Thread.sleep(1000);
-                closeWindowHandle();
+                commonFunctions.closeWindowHandle(driver, parent);
                 logger.log(LogStatus.PASS, "Test Case is Passed");
             } else {
                 logger.log(LogStatus.ERROR, "Window Not Found");
@@ -160,7 +159,7 @@ public class ManageWindchillReport {
             implicitWait(10);
             driver.findElement(By.xpath("//a[text()='Change Notice Log']")).click();
             Thread.sleep(2000);
-            if (openNewWindowHandles("View Change Notice Log")) {
+            if (commonFunctions.openNewWindowHandles("View Change Notice Log",driver)) {
                 Thread.sleep(2000);
                 driver.findElement(By.xpath("//button[text()='Generate']")).click();
                 implicitWait(2);
@@ -174,7 +173,7 @@ public class ManageWindchillReport {
                 getScreenshot(driver, "Change_Notice_Log", "/Screenshots/");
                 Thread.sleep(2000);
                 driver.close();
-                closeWindowHandle();
+                commonFunctions.closeWindowHandle(driver, parent);
                 logger.log(LogStatus.PASS, "Test Case is Passed");
             } else {
                 logger.log(LogStatus.ERROR, "Window Not Found");
@@ -212,7 +211,7 @@ public class ManageWindchillReport {
     @Test(priority = 5)
     public void ExportReport() throws InterruptedException {
         logger = extent.startTest("Export a Report");
-        viewProductMenuSection("Reports");
+        commonFunctions.viewProductMenuSection("Reports",driver, DemoReportDetails.get(0));
         Thread.sleep(2000);
         try {
             driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
@@ -229,45 +228,6 @@ public class ManageWindchillReport {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
     }
-    public void viewProductMenuSection(String section){
-        implicitWait(15);
-        try{
-        driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
-//        implicitWait(5);
-//        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
-        implicitWait(5);
-        //driver.findElement(By.id("ext-gen169")).click();
-        implicitWait(5);
-        if(driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() !=0) {
-            driver.findElement(By.xpath("//span[text()='"+DemoReportDetails.get(0)+"']")).click();
-            implicitWait(5);
-        }
-        driver.findElement(By.xpath("//span[text()='"+section+"']")).click();
-
-        }
-        catch(Exception e){
-            System.out.println(e.getLocalizedMessage());
-            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
-        }
-    }
-    public boolean openNewWindowHandles(String WindowName) {
-        parent = driver.getWindowHandle();
-        Set<String> windows = driver.getWindowHandles();
-        for (String window : windows) {
-            driver.switchTo().window(window);
-            System.out.println(WindowName);
-            System.out.println(driver.getTitle());
-            System.out.println(driver.getTitle().contains(WindowName));
-            if (driver.getTitle().contains(WindowName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public void closeWindowHandle() throws InterruptedException {
-        driver.switchTo().window(parent);
-        Thread.sleep(2000);
-        }
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }

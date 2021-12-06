@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ContentFileManagement {
@@ -101,7 +100,7 @@ public class ContentFileManagement {
     @Test(priority=2)
     public void addSecondaryContent() throws InterruptedException {
         logger = extent.startTest("Add Secondary Content");
-        viewProductMenuSection("Folders");
+        commonFunctions.viewProductMenuSection("Folders", driver, DemoContentDetails.get(0) );
         Thread.sleep(2000);
         try {
             for (int i = 1; i < excelReader.getRowCount(); i++) {
@@ -116,7 +115,7 @@ public class ContentFileManagement {
                 driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/edit.gif\");']")).click();
                 Thread.sleep(5000);
                 implicitWait(10);
-                if (openNewWindowHandles("Edit")) {
+                if (commonFunctions.openNewWindowHandles("Edit",driver)) {
                     if (contentDetails.get(4).equalsIgnoreCase("Local File")) {
                         driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-file-generic_attach.gif\");']")).click();
                     } else if (contentDetails.get(4).equalsIgnoreCase("URL Link")) {
@@ -131,7 +130,7 @@ public class ContentFileManagement {
                     Thread.sleep(2000);
                     driver.findElement(By.xpath("//button[@accesskey='s']")).click();
                     Thread.sleep(2000);
-                    closeWindowHandle();
+                    commonFunctions.closeWindowHandle(driver, parent);
                 } else {
                     logger.log(LogStatus.ERROR, "Window Not Found");
                 }
@@ -147,13 +146,12 @@ public class ContentFileManagement {
     @Test(priority=3)
     public void downloadContent() {
         logger = extent.startTest("Download content file");
-        viewProductMenuSection("Folders");
-
+        commonFunctions.viewProductMenuSection("Folders", driver, DemoContentDetails.get(0));
         try{
             contentActionsClick();
             //Download primary content file
         driver.findElement(By.xpath("//img[@src='http://windchilltest.accenture.com:81/Windchill/netmarkets/images/file_msword.gif']")).click();
-            Thread.sleep(2000);
+        Thread.sleep(2000);
         //Download secondary content file
         //driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-attachmentsName']/a[2]")).click();
         }
@@ -173,9 +171,9 @@ public class ContentFileManagement {
             driver.findElement(By.xpath("//button[text()='Actions']")).click();
             if (driver.findElement(By.xpath("//span[text()='Replace Content']")).isEnabled()) {
                 driver.findElement(By.xpath("//span[text()='Replace Content']")).click();
-                if (openNewWindowHandles("Replace Content")) {
+                if (commonFunctions.openNewWindowHandles("Replace Content", driver)) {
                     documentEditor();
-                    closeWindowHandle();
+                    commonFunctions.closeWindowHandle(driver, parent);
                 } else {
                     logger.log(LogStatus.ERROR, "Window Not Found");
                 }
@@ -199,9 +197,9 @@ public class ContentFileManagement {
             driver.findElement(By.xpath("//button[text()='Actions']")).click();
             if (DemoContentDetails.get(10).equalsIgnoreCase("CheckIn")) {
                 if (driver.findElement(By.xpath("//span[text()='Check In']")).isEnabled()) {
-                    if (openNewWindowHandles("Checking In Document")) {
+                    if (commonFunctions.openNewWindowHandles("Checking In Document", driver)) {
                         documentEditor();
-                        closeWindowHandle();
+                        commonFunctions.closeWindowHandle(driver, parent);
                     } else {
                         logger.log(LogStatus.ERROR, "Window Not Found");
                     }
@@ -270,48 +268,13 @@ public class ContentFileManagement {
         }
     }
 
-    public void viewProductMenuSection(String section){
-        implicitWait(15);
-        try {
-            driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
-//        implicitWait(5);
-//        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
-            implicitWait(5);
-            //driver.findElement(By.id("ext-gen169")).click();
-            implicitWait(5);
-            if (driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() != 0) {
-                driver.findElement(By.xpath("//span[text()='"+DemoContentDetails.get(0)+"']")).click();
-                implicitWait(5);
-            }
-            driver.findElement(By.xpath("//span[text()='" + section + "']")).click();
-            implicitWait(20);
-        }
-        catch(Exception e){
-            System.out.println(e.getLocalizedMessage());
-            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
-        }
-    }
-    public boolean openNewWindowHandles(String WindowName) {
-        parent = driver.getWindowHandle();
-        Set<String> windows = driver.getWindowHandles();
-        for (String window : windows) {
-            driver.switchTo().window(window);
-            if (driver.getTitle().contains(WindowName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public void closeWindowHandle() throws InterruptedException {
-        driver.switchTo().window(parent);
-        Thread.sleep(2000);
-    }
+
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
 
     @AfterTest
-    public void closebrowser() {
+    public void closeBrowser() {
         if (driver != null) {
             driver.close();
             driver.quit();

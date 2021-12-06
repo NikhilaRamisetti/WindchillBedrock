@@ -121,7 +121,7 @@ public class customAction {
             driver.findElement(By.xpath("//input[@id='objectType']")).sendKeys(actionDetails.get(3));
             Thread.sleep(2000);
             driver.findElement(By.xpath("//button[@accesskey='f']")).click();
-            closeWindowHandle();
+            commonFunctions.closeWindowHandle(driver, parent);
             logger.log(LogStatus.PASS, "Test Case is Passed");
         }
         catch(Exception e){
@@ -177,9 +177,6 @@ public class customAction {
         System.out.println(windows.size());
         for (String window : windows) {
             driver.switchTo().window(window);
-            System.out.println(window);
-            System.out.println(driver.getTitle());
-            System.out.println(driver.getTitle().contains(window));
         }
     }
     public void closeWindowHandle() throws InterruptedException {

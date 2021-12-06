@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ManageWindchillPart {
@@ -142,7 +141,7 @@ public class ManageWindchillPart {
     @Test(priority=2)
     public void createPart() throws InterruptedException {
         logger = extent.startTest("Creating a Part");
-        viewProductFoldersPage();
+        commonFunctions.viewProductMenuSection("Folders", driver, DemoPartDetails.get(3));
         implicitWait(10);
         try {
             for (int i = 1; i < excelReader.getRowCount(); i++) {
@@ -153,11 +152,8 @@ public class ManageWindchillPart {
                 driver.findElement(By.xpath("//span[text()='New']")).click();
                 driver.findElement(By.xpath("//span[text()='New Part']")).click();
                 Thread.sleep(2000);
-                String parent = driver.getWindowHandle();
-                Set<String> windows = driver.getWindowHandles();
-                for (String window : windows) {
-                    driver.switchTo().window(window);
-                    if (driver.getTitle().contains("New Part")) {
+                String parent= driver.getWindowHandle();
+                    if (commonFunctions.openNewWindowHandles("New Part",driver)) {
                         implicitWait(10);
                         driver.findElement(By.xpath("//select[@id='!~objectHandle~partHandle~!createType']")).click();
                         implicitWait(2);
@@ -170,8 +166,8 @@ public class ManageWindchillPart {
                         Thread.sleep(5000);
                         System.out.println("Part created successfully");
                     }
-                }
-                driver.switchTo().window(parent);
+                driver.close();
+                commonFunctions.closeWindowHandle(driver, parent);
                 Thread.sleep(2000);
             }
             logger.log(LogStatus.PASS, "Test Case is Passed");
@@ -185,7 +181,7 @@ public class ManageWindchillPart {
     @Test(priority=3)
     public void GetPartInfo() throws InterruptedException {
         logger = extent.startTest("Get Part Information");
-        viewProductFoldersPage();
+        commonFunctions.viewProductMenuSection("Folders", driver, DemoPartDetails.get(3));
         implicitWait(10);
         Thread.sleep(2000);
         ViewPartInfoPage(DemoPartDetails.get(0));
@@ -205,7 +201,7 @@ public class ManageWindchillPart {
     public void deletePart() throws InterruptedException {
         logger = extent.startTest("Delete a Part");
         Thread.sleep(2000);
-        viewProductFoldersPage();
+        commonFunctions.viewProductMenuSection("Folders", driver, DemoPartDetails.get(3));
         implicitWait(10);
         Thread.sleep(2000);
         ViewPartInfoPage(DemoPartDetails.get(0));
@@ -215,16 +211,12 @@ public class ManageWindchillPart {
             driver.findElement(By.xpath("//span[text()='Delete']")).click();
             Thread.sleep(2000);
             String parent = driver.getWindowHandle();
-            Set<String> windows = driver.getWindowHandles();
-            for (String window : windows) {
-                driver.switchTo().window(window);
-                if (driver.getTitle().contains("Delete")) {
+            if (commonFunctions.openNewWindowHandles("Delete",driver)) {
                     implicitWait(10);
                     driver.findElement(By.xpath("//div[@class='x-grid3-row-checker']")).click();
                     driver.findElement(By.xpath("//button[@accesskey='o']")).click();
                 }
-            }
-            driver.switchTo().window(parent);
+            commonFunctions.closeWindowHandle(driver, parent);
             Thread.sleep(2000);
             System.out.println("Part deleted successfully");
             logger.log(LogStatus.PASS, "Test Case is Passed");
@@ -235,27 +227,6 @@ public class ManageWindchillPart {
         }
     }
 
-    public void viewProductFoldersPage(){
-        implicitWait(15);
-        try {
-            driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
-//        implicitWait(5);
-//        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
-            implicitWait(5);
-            //driver.findElement(By.id("ext-gen169")).click();
-            implicitWait(5);
-            if (driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() != 0) {
-                driver.findElement(By.xpath("//span[text()='"+DemoPartDetails.get(3)+"']")).click();
-                implicitWait(5);
-            }
-            driver.findElement(By.xpath("//span[text()='Folders']")).click();
-        }
-        catch(Exception e){
-            System.out.println(e.getLocalizedMessage());
-            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
-        }
-        implicitWait(20);
-    }
 
     public void ViewPartInfoPage(String Part){
         String partName = Part;
@@ -269,7 +240,6 @@ public class ManageWindchillPart {
                     logger.log(LogStatus.ERROR, "Re-Check the version of the part, It doesnt exist");
                 }
             }
-
         }
         catch(Exception e){
             System.out.println(e.getLocalizedMessage());
