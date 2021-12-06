@@ -183,4 +183,7 @@ public class ExcelReader {
         }
         return rowData;
     }
+
+    public void getTestDataArray(String s) {
+    }
 }

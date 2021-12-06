@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ManageWindchillReport {
@@ -42,20 +42,18 @@ public class ManageWindchillReport {
         System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
 
     }
-
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","Credentials.xlsx","Sheet1");
-    //ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","WindchillParts.xlsx","Sheet1");
+    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","ReportsManagement");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
-    String DefaultPart = "Test Part1";
+    List<String> DemoReportDetails = excelReader.getRowData(1, 0);
 
-
-    public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
+    public static String getScreenshot(WebDriver driver, String screenshotName, String FolderName) throws Exception {
         String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
         TakesScreenshot ts = (TakesScreenshot) driver;
         File source = ts.getScreenshotAs(OutputType.FILE);
-        String destination = Root + "/FailedTestsScreenshots/" + screenshotName + dateName + ".png";
+        String destination = Root + FolderName + screenshotName + dateName + ".png";
         File finalDestination = new File(destination);
         FileUtils.copyFile(source, finalDestination);
         return destination;
@@ -98,81 +96,109 @@ public class ManageWindchillReport {
         System.out.println("Success: Launched Windchill Browser");
         logger.log(LogStatus.PASS, "Test Case is Passed");
     }
-
     @Test(priority=2)
     public void createReport() throws InterruptedException {
         logger = extent.startTest("Creating a Report");
-        viewProductMenuSection("Utilities");
-        implicitWait(10);
-        driver.findElement(By.xpath("//a[@id='P39088542612641']")).click();
-        driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
-            if (openNewWindowHandles("Query Builder")) {
+        commonFunctions.viewProductMenuSection("Utilities", driver, DemoReportDetails.get(0));
+        Thread.sleep(2000);
+        try {
+            driver.findElement(By.xpath("//a[contains(text(),'Report Management')]")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
+            Thread.sleep(2000);
+            if (commonFunctions.openNewWindowHandles("Query Builder", driver)) {
                 implicitWait(10);
-                driver.findElement(By.xpath("//input[@id='reportTemplateName']")).sendKeys("Demo Report2");
+                driver.findElement(By.xpath("//input[@id='reportTemplateName']")).click();
+                driver.findElement(By.xpath("//input[@id='reportTemplateName']")).sendKeys(DemoReportDetails.get(1));
                 implicitWait(10);
-                driver.findElement(By.xpath("//textarea[@id='description']")).sendKeys("Demo Report fro Bedrock Automation");
+                driver.findElement(By.xpath("//textarea[@id='description']")).click();
+                driver.findElement(By.xpath("//textarea[@id='description']")).sendKeys("Demo Report for Bedrock Automation");
                 Thread.sleep(1000);
                 driver.findElement(By.xpath("//div[@id='tablesAndJoins']")).click();
-                implicitWait(10);
+                Thread.sleep(1000);
                 driver.findElement(By.xpath("//button[@id='addTable']")).click();
-                implicitWait(10);
+                Thread.sleep(1000);
                 driver.findElement(By.xpath("//a[text()='Abs Collection Criteria']")).click();
                 implicitWait(10);
                 driver.findElement(By.xpath("//button[text()='OK']")).click();
-                implicitWait(10);
-                driver.findElement(By.xpath("//div[@id='Select or Constrain']")).click();
-                implicitWait(10);
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//div[@id='selectOrConstrain']")).click();
+                Thread.sleep(1000);
                 driver.findElement(By.xpath("//div[@id='toolbarAddButton']")).click();
                 implicitWait(10);
-                driver.findElement(By.xpath("//button[text()='Page Text']")).click();
+                driver.findElement(By.xpath("//a[text()='Reportable Item']")).click();
+                Thread.sleep(1000);
+                driver.findElement(By.xpath("//span[@id='TREETOPwt.dataops.objectcol.AbsCollectionCriteria']")).click();
                 implicitWait(10);
+                driver.findElement(By.xpath("//button[text()='OK']")).click();
+                Thread.sleep(1000);
                 driver.findElement(By.xpath("//button[text()='Apply']")).click();
                 Thread.sleep(1000);
                 driver.findElement(By.xpath("//button[text()='Close']")).click();
-
-                closeWindowHandle();
+                Thread.sleep(1000);
+                commonFunctions.closeWindowHandle(driver, parent);
                 logger.log(LogStatus.PASS, "Test Case is Passed");
-            }
-            else{
+            } else {
                 logger.log(LogStatus.ERROR, "Window Not Found");
             }
-
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
         }
 
     @Test(priority=3)
-    public void ViewReport() throws InterruptedException {
+    public void ViewReport() throws Exception {
         logger = extent.startTest("View Report");
-        viewProductMenuSection("Reports");
-        implicitWait(10);
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
-        driver.findElement(By.xpath("//a[text()='Change Notice Log']")).click();
-        if(openNewWindowHandles("View Change Notice Log")){
-            driver.findElement(By.xpath("//button[text()='Generate']")).click();
-            implicitWait(2);
+        try {
+            driver.get("http://windchilltest.accenture.com:81/Windchill/app/#ptc1/comp/reporting.product.listReports");
+            implicitWait(10);
             Thread.sleep(2000);
-            driver.findElement(By.xpath("//select[@name='delegateName']")).click();
-            driver.findElement(By.xpath("//option[text()='CSV (Comma Separated Variable)']")).click();
-            driver.findElement(By.xpath("//input[@value='Generate']")).click();
+            driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
+            implicitWait(10);
+            driver.findElement(By.xpath("//a[text()='Change Notice Log']")).click();
             Thread.sleep(2000);
-            closeWindowHandle();
-            logger.log(LogStatus.PASS, "Test Case is Passed");
+            if (commonFunctions.openNewWindowHandles("View Change Notice Log",driver)) {
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//button[text()='Generate']")).click();
+                implicitWait(2);
+                Thread.sleep(2000);
+                Thread.sleep(5000);
+                //Click Manually for the next driver click
+                //driver.findElement(By.xpath("//*[@value='Generate']")).click();
+                JavascriptExecutor jse = (JavascriptExecutor) driver;
+                jse.executeScript("window.confirm('Please click on generate');");
+                Thread.sleep(2000);
+                getScreenshot(driver, "Change_Notice_Log", "/Screenshots/");
+                Thread.sleep(2000);
+                driver.close();
+                commonFunctions.closeWindowHandle(driver, parent);
+                logger.log(LogStatus.PASS, "Test Case is Passed");
+            } else {
+                logger.log(LogStatus.ERROR, "Window Not Found");
+            }
         }
-        else{
-            logger.log(LogStatus.ERROR, "Window Not Found");
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
 
     }
-
+    //Edit Report is only possible if logged In as Admin (wcadmin)
+    /*
     @Test(priority = 4)
     public void EditReport() throws InterruptedException {
         logger = extent.startTest("Edit a Report");
         Thread.sleep(2000);
         viewProductMenuSection("Reports");
-        implicitWait(10);
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]/../..//following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-updateReportIconAction ']")).click();
+        driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]/../..//following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-updateReportIconAction ']//img")).click();
+        Thread.sleep(2000);
         if(openNewWindowHandles("Edit Report")) {
+            Thread.sleep(2000);
             driver.findElement(By.xpath("//button[@accesskey='o']")).click();
             closeWindowHandle();
             logger.log(LogStatus.PASS, "Test Case is Passed");
@@ -181,46 +207,27 @@ public class ManageWindchillReport {
             logger.log(LogStatus.ERROR, "Window Not Found");
         }
     }
+    */
     @Test(priority = 5)
     public void ExportReport() throws InterruptedException {
         logger = extent.startTest("Export a Report");
-        Actions actions = new Actions(driver);
-        WebElement elementLocator = driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]"));
-        actions.contextClick(elementLocator).perform();
-        driver.findElement(By.xpath("//span[text()='Export Report']")).click();
+        commonFunctions.viewProductMenuSection("Reports",driver, DemoReportDetails.get(0));
         Thread.sleep(2000);
-        logger.log(LogStatus.PASS, "Test Case is Passed");
-    }
-    public void viewProductMenuSection(String section){
-        implicitWait(15);
-        driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
-//        implicitWait(5);
-//        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
-        implicitWait(5);
-        //driver.findElement(By.id("ext-gen169")).click();
-        implicitWait(5);
-        if(driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() !=0) {
-            driver.findElement(By.xpath("//span[text()='Sample Product1']")).click();
-            implicitWait(5);
+        try {
+            driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
+            Thread.sleep(2000);
+            Actions actions = new Actions(driver);
+            WebElement elementLocator = driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]"));
+            actions.contextClick(elementLocator).perform();
+            driver.findElement(By.xpath("//span[text()='Export Report']")).click();
+            Thread.sleep(2000);
+            logger.log(LogStatus.PASS, "Test Case is Passed");
         }
-        driver.findElement(By.xpath("//span[text()='"+section+"']")).click();
-        implicitWait(20);
-    }
-    public boolean openNewWindowHandles(String WindowName) {
-        parent = driver.getWindowHandle();
-        Set<String> windows = driver.getWindowHandles();
-        for (String window : windows) {
-            driver.switchTo().window(window);
-            if (driver.getTitle().contains(WindowName)) {
-                return true;
-            }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
-        return false;
     }
-    public void closeWindowHandle() throws InterruptedException {
-        driver.switchTo().window(parent);
-        Thread.sleep(2000);
-        }
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
@@ -238,7 +245,7 @@ public class ManageWindchillReport {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/");
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
