@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -42,20 +43,18 @@ public class ManageWindchillReport {
         System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
 
     }
-    public static JavascriptExecutor jse;
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","Credentials.xlsx","Sheet1");
-    //ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","WindchillParts.xlsx","Sheet1");
+    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","ReportsManagement");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
-    String DefaultPart = "Test Part1";
+    List<String> DemoReportDetails = excelReader.getRowData(1, 0);
 
-
-    public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
+    public static String getScreenshot(WebDriver driver, String screenshotName, String FolderName) throws Exception {
         String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
         TakesScreenshot ts = (TakesScreenshot) driver;
         File source = ts.getScreenshotAs(OutputType.FILE);
-        String destination = Root + "/FailedTestsScreenshots/" + screenshotName + dateName + ".png";
+        String destination = Root + FolderName + screenshotName + dateName + ".png";
         File finalDestination = new File(destination);
         FileUtils.copyFile(source, finalDestination);
         return destination;
@@ -103,14 +102,15 @@ public class ManageWindchillReport {
         logger = extent.startTest("Creating a Report");
         viewProductMenuSection("Utilities");
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//a[contains(text(),'Report Management')]")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
-        Thread.sleep(2000);
+        try {
+            driver.findElement(By.xpath("//a[contains(text(),'Report Management')]")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
+            Thread.sleep(2000);
             if (openNewWindowHandles("Query Builder")) {
                 implicitWait(10);
                 driver.findElement(By.xpath("//input[@id='reportTemplateName']")).click();
-                driver.findElement(By.xpath("//input[@id='reportTemplateName']")).sendKeys("Demo Report2");
+                driver.findElement(By.xpath("//input[@id='reportTemplateName']")).sendKeys(DemoReportDetails.get(1));
                 implicitWait(10);
                 driver.findElement(By.xpath("//textarea[@id='description']")).click();
                 driver.findElement(By.xpath("//textarea[@id='description']")).sendKeys("Demo Report for Bedrock Automation");
@@ -139,41 +139,50 @@ public class ManageWindchillReport {
                 Thread.sleep(1000);
                 closeWindowHandle();
                 logger.log(LogStatus.PASS, "Test Case is Passed");
-            }
-            else{
+            } else {
                 logger.log(LogStatus.ERROR, "Window Not Found");
             }
-
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
         }
 
     @Test(priority=3)
     public void ViewReport() throws Exception {
         logger = extent.startTest("View Report");
-        driver.get("http://windchilltest.accenture.com:81/Windchill/app/#ptc1/comp/reporting.product.listReports");
-        implicitWait(10);
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
-        implicitWait(10);
-        driver.findElement(By.xpath("//a[text()='Change Notice Log']")).click();
-        Thread.sleep(2000);
-        if(openNewWindowHandles("View Change Notice Log")){
+        try {
+            driver.get("http://windchilltest.accenture.com:81/Windchill/app/#ptc1/comp/reporting.product.listReports");
+            implicitWait(10);
             Thread.sleep(2000);
-            driver.findElement(By.xpath("//button[text()='Generate']")).click();
-            implicitWait(2);
+            driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
+            implicitWait(10);
+            driver.findElement(By.xpath("//a[text()='Change Notice Log']")).click();
             Thread.sleep(2000);
-            Thread.sleep(5000);
-            //Click Manually for the next driver click
-            //driver.findElement(By.xpath("//*[@value='Generate']")).click();
-            jse.executeScript("window.confirm('Please click on Generate');");
-            Thread.sleep(2000);
-            getScreenshot(driver, "Change_Notice_Log");
-            Thread.sleep(2000);
-            driver.close();
-            closeWindowHandle();
-            logger.log(LogStatus.PASS, "Test Case is Passed");
+            if (openNewWindowHandles("View Change Notice Log")) {
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//button[text()='Generate']")).click();
+                implicitWait(2);
+                Thread.sleep(2000);
+                Thread.sleep(5000);
+                //Click Manually for the next driver click
+                //driver.findElement(By.xpath("//*[@value='Generate']")).click();
+                JavascriptExecutor jse = (JavascriptExecutor) driver;
+                jse.executeScript("window.confirm('Please click on generate');");
+                Thread.sleep(2000);
+                getScreenshot(driver, "Change_Notice_Log", "/Screenshots/");
+                Thread.sleep(2000);
+                driver.close();
+                closeWindowHandle();
+                logger.log(LogStatus.PASS, "Test Case is Passed");
+            } else {
+                logger.log(LogStatus.ERROR, "Window Not Found");
+            }
         }
-        else{
-            logger.log(LogStatus.ERROR, "Window Not Found");
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
 
     }
@@ -205,17 +214,24 @@ public class ManageWindchillReport {
         logger = extent.startTest("Export a Report");
         viewProductMenuSection("Reports");
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
-        Thread.sleep(2000);
-        Actions actions = new Actions(driver);
-        WebElement elementLocator = driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]"));
-        actions.contextClick(elementLocator).perform();
-        driver.findElement(By.xpath("//span[text()='Export Report']")).click();
-        Thread.sleep(2000);
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        try {
+            driver.findElement(By.xpath("//div[@class='ux-maximgb-tg-elbow-active ux-maximgb-tg-elbow-plus']")).click();
+            Thread.sleep(2000);
+            Actions actions = new Actions(driver);
+            WebElement elementLocator = driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]"));
+            actions.contextClick(elementLocator).perform();
+            driver.findElement(By.xpath("//span[text()='Export Report']")).click();
+            Thread.sleep(2000);
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     public void viewProductMenuSection(String section){
         implicitWait(15);
+        try{
         driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
 //        implicitWait(5);
 //        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
@@ -223,11 +239,16 @@ public class ManageWindchillReport {
         //driver.findElement(By.id("ext-gen169")).click();
         implicitWait(5);
         if(driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() !=0) {
-            driver.findElement(By.xpath("//span[text()='Sample Product1']")).click();
+            driver.findElement(By.xpath("//span[text()='"+DemoReportDetails.get(0)+"']")).click();
             implicitWait(5);
         }
         driver.findElement(By.xpath("//span[text()='"+section+"']")).click();
-        implicitWait(20);
+
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     public boolean openNewWindowHandles(String WindowName) {
         parent = driver.getWindowHandle();
@@ -264,7 +285,7 @@ public class ManageWindchillReport {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/");
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());

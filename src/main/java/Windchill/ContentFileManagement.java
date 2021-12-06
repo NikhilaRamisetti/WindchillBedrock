@@ -42,12 +42,12 @@ public class ContentFileManagement {
 
     }
     public static JavascriptExecutor jse;
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","Credentials.xlsx","Sheet1");
-    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","ContentFilesData.xlsx","Sheet1");
+    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","ContentFileManagement");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
-    java.util.List<String> defaultContentDetails = excelReader.getRowData(1, 0);
+    java.util.List<String> DemoContentDetails = excelReader.getRowData(1, 0);
 
 
 
@@ -103,40 +103,46 @@ public class ContentFileManagement {
         logger = extent.startTest("Add Secondary Content");
         viewProductMenuSection("Folders");
         Thread.sleep(2000);
-        for(int i=1;i<excelReader.getRowCount();i++) {
-            java.util.List<String> contentDetails = excelReader.getRowData(i, 0);
-            //Primary document details
-            driver.findElement(By.xpath("//a[text()='" + contentDetails.get(0) + "']")).click();
-            Thread.sleep(2000);
-            implicitWait(10);
-            driver.findElement(By.xpath("//span[text()='Content']")).click();
-            Thread.sleep(5000);
-            implicitWait(10);
-            driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/edit.gif\");']")).click();
-            Thread.sleep(5000);
-            implicitWait(10);
-            if (openNewWindowHandles("Edit")) {
-                if (contentDetails.get(4).equalsIgnoreCase("Local File")) {
-                    driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-file-generic_attach.gif\");']")).click();
-                } else if (contentDetails.get(4).equalsIgnoreCase("URL Link")) {
-                    driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-url_attach.gif\");']")).click();
-                } else if (contentDetails.get(4).equalsIgnoreCase("External storage")) {
-                    driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-external_attach.gif\");']")).click();
+        try {
+            for (int i = 1; i < excelReader.getRowCount(); i++) {
+                java.util.List<String> contentDetails = excelReader.getRowData(i, 0);
+                //Primary document details
+                driver.findElement(By.xpath("//a[text()='" + contentDetails.get(0) + "']")).click();
+                Thread.sleep(2000);
+                implicitWait(10);
+                driver.findElement(By.xpath("//span[text()='Content']")).click();
+                Thread.sleep(5000);
+                implicitWait(10);
+                driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/edit.gif\");']")).click();
+                Thread.sleep(5000);
+                implicitWait(10);
+                if (openNewWindowHandles("Edit")) {
+                    if (contentDetails.get(4).equalsIgnoreCase("Local File")) {
+                        driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-file-generic_attach.gif\");']")).click();
+                    } else if (contentDetails.get(4).equalsIgnoreCase("URL Link")) {
+                        driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-url_attach.gif\");']")).click();
+                    } else if (contentDetails.get(4).equalsIgnoreCase("External storage")) {
+                        driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-external_attach.gif\");']")).click();
+                    } else {
+                        logger.log(LogStatus.ERROR, "Type of document doesnt exist");
+                    }
+                    driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentName']//input[1]")).sendKeys(contentDetails.get(5));
+                    driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentLocation']//input[1]")).sendKeys(contentDetails.get(6));
+                    Thread.sleep(2000);
+                    driver.findElement(By.xpath("//button[@accesskey='s']")).click();
+                    Thread.sleep(2000);
+                    closeWindowHandle();
                 } else {
-                    logger.log(LogStatus.ERROR, "Type of document doesnt exist");
+                    logger.log(LogStatus.ERROR, "Window Not Found");
                 }
-                driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentName']//input[1]")).sendKeys(contentDetails.get(5));
-                driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentLocation']//input[1]")).sendKeys(contentDetails.get(6));
-                Thread.sleep(2000);
-                driver.findElement(By.xpath("//button[@accesskey='s']")).click();
-                Thread.sleep(2000);
-                closeWindowHandle();
-            } else {
-                logger.log(LogStatus.ERROR, "Window Not Found");
             }
-        }
 
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     @Test(priority=3)
     public void downloadContent() {
@@ -163,103 +169,127 @@ public class ContentFileManagement {
     public void replaceContent() throws InterruptedException {
         logger = extent.startTest("Replace Content");
         //contentActionsClick();
-        driver.findElement(By.xpath("//button[text()='Actions']")).click();
-        if(driver.findElement(By.xpath("//span[text()='Replace Content']")).isEnabled()){
-            driver.findElement(By.xpath("//span[text()='Replace Content']")).click();
-            if (openNewWindowHandles("Replace Content")){
-                documentEditor();
-                closeWindowHandle();
+        try {
+            driver.findElement(By.xpath("//button[text()='Actions']")).click();
+            if (driver.findElement(By.xpath("//span[text()='Replace Content']")).isEnabled()) {
+                driver.findElement(By.xpath("//span[text()='Replace Content']")).click();
+                if (openNewWindowHandles("Replace Content")) {
+                    documentEditor();
+                    closeWindowHandle();
+                } else {
+                    logger.log(LogStatus.ERROR, "Window Not Found");
+                }
+            } else {
+                logger.log(LogStatus.ERROR, "Document is checked out, please check In for Replacing content");
             }
-            else{
-                logger.log(LogStatus.ERROR, "Window Not Found");
-            }
-        }
-        else{
-            logger.log(LogStatus.ERROR, "Document is checked out, please check In for Replacing content");
-        }
 
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
 
     @Test(priority = 5)
     public void checkInAndCheckOut() throws InterruptedException {
         logger = extent.startTest("CheckIn And CheckOut");
         //contentActionsClick();
-        driver.findElement(By.xpath("//button[text()='Actions']")).click();
-        if(defaultContentDetails.get(10).equalsIgnoreCase("CheckIn")){
-          if(driver.findElement(By.xpath("//span[text()='Check In']")).isEnabled()){
-             if(openNewWindowHandles("Checking In Document")){
-                documentEditor();
-                closeWindowHandle();
-             }
-             else{
-                 logger.log(LogStatus.ERROR, "Window Not Found");
-             }
-          }
-          else{
-              logger.log(LogStatus.ERROR, "Document already checked In, Please check out manually and try again");
-          }
-        }
-        else if(defaultContentDetails.get(10).equalsIgnoreCase("CheckOut")){
-            if(driver.findElement(By.xpath("//span[text()='Check Out']")).isEnabled()){
-                driver.findElement(By.xpath("//span[text()='Check Out']")).click();
-                Thread.sleep(2000);
+        try {
+            driver.findElement(By.xpath("//button[text()='Actions']")).click();
+            if (DemoContentDetails.get(10).equalsIgnoreCase("CheckIn")) {
+                if (driver.findElement(By.xpath("//span[text()='Check In']")).isEnabled()) {
+                    if (openNewWindowHandles("Checking In Document")) {
+                        documentEditor();
+                        closeWindowHandle();
+                    } else {
+                        logger.log(LogStatus.ERROR, "Window Not Found");
+                    }
+                } else {
+                    logger.log(LogStatus.ERROR, "Document already checked In, Please check out manually and try again");
+                }
+            } else if (DemoContentDetails.get(10).equalsIgnoreCase("CheckOut")) {
+                if (driver.findElement(By.xpath("//span[text()='Check Out']")).isEnabled()) {
+                    driver.findElement(By.xpath("//span[text()='Check Out']")).click();
+                    Thread.sleep(2000);
+                } else {
+                    logger.log(LogStatus.ERROR, "Document already checked out to user, Please check out manually and try again");
+                }
             }
-            else{
-                logger.log(LogStatus.ERROR, "Document already checked out to user, Please check out manually and try again");
-            }
+            logger.log(LogStatus.PASS, "Test Case is Passed");
         }
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     public void documentEditor() throws InterruptedException {
-        driver.findElement(By.xpath("//select[@id='primary0contentSourceList']")).click();
-        if (defaultContentDetails.get(7).equalsIgnoreCase("Local File")) {
-            driver.findElement(By.xpath("//option[@id='primary0contentSourceList_FILE']")).click();
-            driver.findElement(By.xpath("//input[@id='keep_existing_primary_file']")).click();
-            Thread.sleep(2000);
-            driver.findElement(By.xpath("//button[@accesskey='o']")).click();
-        } else if (defaultContentDetails.get(7).equalsIgnoreCase("URL Link")) {
-            driver.findElement(By.xpath("//option[@id='primary0contentSourceList_URL']")).click();
-            driver.findElement(By.xpath("//input[@id='primaryUrlLocationTextBox']")).sendKeys(defaultContentDetails.get(9));
-            driver.findElement(By.xpath("//input[@id='primaryUrlNameTextBox']")).sendKeys(defaultContentDetails.get(8));
-            Thread.sleep(2000);
-            driver.findElement(By.xpath("//button[@accesskey='o']")).click();
-            Thread.sleep(2000);
-        } else if (defaultContentDetails.get(7).equalsIgnoreCase("External storage")) {
-            driver.findElement(By.xpath("//option[@id='primary0contentSourceList_EXTERNAL']")).click();
-            driver.findElement(By.xpath("//textarea[@id='primaryExternalLocationTextArea']")).sendKeys(defaultContentDetails.get(9));
-            driver.findElement(By.xpath("//textarea[@id='primaryExternalNameTextBox']")).sendKeys(defaultContentDetails.get(8));
-            Thread.sleep(2000);
-            driver.findElement(By.xpath("//button[@accesskey='o']")).click();
-            Thread.sleep(2000);
-        } else {
-            logger.log(LogStatus.ERROR, "Type of document doesnt exist");
+        try {
+            driver.findElement(By.xpath("//select[@id='primary0contentSourceList']")).click();
+            if (DemoContentDetails.get(7).equalsIgnoreCase("Local File")) {
+                driver.findElement(By.xpath("//option[@id='primary0contentSourceList_FILE']")).click();
+                driver.findElement(By.xpath("//input[@id='keep_existing_primary_file']")).click();
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//button[@accesskey='o']")).click();
+            } else if (DemoContentDetails.get(7).equalsIgnoreCase("URL Link")) {
+                driver.findElement(By.xpath("//option[@id='primary0contentSourceList_URL']")).click();
+                driver.findElement(By.xpath("//input[@id='primaryUrlLocationTextBox']")).sendKeys(DemoContentDetails.get(9));
+                driver.findElement(By.xpath("//input[@id='primaryUrlNameTextBox']")).sendKeys(DemoContentDetails.get(8));
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//button[@accesskey='o']")).click();
+                Thread.sleep(2000);
+            } else if (DemoContentDetails.get(7).equalsIgnoreCase("External storage")) {
+                driver.findElement(By.xpath("//option[@id='primary0contentSourceList_EXTERNAL']")).click();
+                driver.findElement(By.xpath("//textarea[@id='primaryExternalLocationTextArea']")).sendKeys(DemoContentDetails.get(9));
+                driver.findElement(By.xpath("//textarea[@id='primaryExternalNameTextBox']")).sendKeys(DemoContentDetails.get(8));
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//button[@accesskey='o']")).click();
+                Thread.sleep(2000);
+            } else {
+                logger.log(LogStatus.ERROR, "Type of document doesnt exist");
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
     }
     public void contentActionsClick() throws InterruptedException {
-        Thread.sleep(5000);
-        driver.findElement(By.xpath("//a[text()='" + defaultContentDetails.get(0) + "']")).click();
-        Thread.sleep(2000);
-        implicitWait(10);
-        driver.findElement(By.xpath("//span[text()='Content']")).click();
-        Thread.sleep(5000);
-        //driver.findElement(By.xpath("//button[text()='Actions']")).click();
+        try {
+            Thread.sleep(5000);
+            driver.findElement(By.xpath("//a[text()='" + DemoContentDetails.get(0) + "']")).click();
+            Thread.sleep(2000);
+            implicitWait(10);
+            driver.findElement(By.xpath("//span[text()='Content']")).click();
+            Thread.sleep(5000);
+            //driver.findElement(By.xpath("//button[text()='Actions']")).click();
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
 
     public void viewProductMenuSection(String section){
         implicitWait(15);
-        driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
+        try {
+            driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
 //        implicitWait(5);
 //        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
-        implicitWait(5);
-        //driver.findElement(By.id("ext-gen169")).click();
-        implicitWait(5);
-        if(driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() !=0) {
-            driver.findElement(By.xpath("//span[text()='Sample Product1']")).click();
             implicitWait(5);
+            //driver.findElement(By.id("ext-gen169")).click();
+            implicitWait(5);
+            if (driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() != 0) {
+                driver.findElement(By.xpath("//span[text()='"+DemoContentDetails.get(0)+"']")).click();
+                implicitWait(5);
+            }
+            driver.findElement(By.xpath("//span[text()='" + section + "']")).click();
+            implicitWait(20);
         }
-        driver.findElement(By.xpath("//span[text()='"+section+"']")).click();
-        implicitWait(20);
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     public boolean openNewWindowHandles(String WindowName) {
         parent = driver.getWindowHandle();

@@ -44,13 +44,13 @@ public class customAction {
 
     }
 
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","Credentials.xlsx","Sheet1");
-    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","customActionsData.xlsx","Sheet1");
+    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","CustomActions");
     java.util.List<String> actionDetails= excelReader.getRowData(1,0);
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
-    String DefaultPart = "Test Part1";
+    //String DefaultPart = "Test Part1";
 
 
     public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
@@ -105,12 +105,13 @@ public class customAction {
         logger = extent.startTest("Creating a custom Action");
         viewCustomizationMenuSection();
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//button[text()='Search']")).click();
-        driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName=folderbrowser_toolbar_new_submenu']//img")).click();
-        driver.findElement(By.xpath("//button[text()='Actions']")).click();
-        driver.findElement(By.xpath("//span[text()='Create Action']")).click();
-        Thread.sleep(2000);
-        openNewWindowHandles();
+        try {
+            driver.findElement(By.xpath("//button[text()='Search']")).click();
+            driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName=folderbrowser_toolbar_new_submenu']//img")).click();
+            driver.findElement(By.xpath("//button[text()='Actions']")).click();
+            driver.findElement(By.xpath("//span[text()='Create Action']")).click();
+            Thread.sleep(2000);
+            openNewWindowHandles();
             implicitWait(10);
             driver.findElement(By.xpath("//input[@id='description']")).click();
             driver.findElement(By.xpath("//input[@id='description']")).sendKeys(actionDetails.get(1));
@@ -122,6 +123,11 @@ public class customAction {
             driver.findElement(By.xpath("//button[@accesskey='f']")).click();
             closeWindowHandle();
             logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
 
     }
     @Test(priority=3)
@@ -129,29 +135,41 @@ public class customAction {
         logger = extent.startTest("Delete Custom Action");
         viewCustomizationMenuSection();
         Thread.sleep(2000);
-        driver.findElement(By.xpath("//button[text()='Search']")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName=folderbrowser_toolbar_new_submenu']//img")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//div[contains(text(),'"+actionDetails.get(1)+"')]/../preceding-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-checker x-grid3-cell-first ']//div[@class='x-grid3-row-checker']")).click();
-        driver.findElement(By.xpath("//button[text()='Actions']")).click();
-        driver.findElement(By.xpath("//span[text()='Remove Action From Model']")).click();
-        Thread.sleep(2000);
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        try {
+            driver.findElement(By.xpath("//button[text()='Search']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName=folderbrowser_toolbar_new_submenu']//img")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//div[contains(text(),'" + actionDetails.get(1) + "')]/../preceding-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-checker x-grid3-cell-first ']//div[@class='x-grid3-row-checker']")).click();
+            driver.findElement(By.xpath("//button[text()='Actions']")).click();
+            driver.findElement(By.xpath("//span[text()='Remove Action From Model']")).click();
+            Thread.sleep(2000);
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     public void viewCustomizationMenuSection() throws InterruptedException {
         implicitWait(15);
-        driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
-        implicitWait(5);
-        driver.findElement(By.xpath("//span[@class='x-tab-strip-text customizationNavigation-icon']")).click();
-        implicitWait(5);
-        driver.findElement(By.xpath("//span[text()='Tools']")).click();
-        implicitWait(5);
-        implicitWait(20);
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//a[contains(text(),'Action Model')]")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//input[@name='modelName']")).sendKeys(actionDetails.get(0));
+        try {
+            driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
+            implicitWait(5);
+            driver.findElement(By.xpath("//span[@class='x-tab-strip-text customizationNavigation-icon']")).click();
+            implicitWait(5);
+            driver.findElement(By.xpath("//span[text()='Tools']")).click();
+            implicitWait(5);
+            implicitWait(20);
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//a[contains(text(),'Action Model')]")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//input[@name='modelName']")).sendKeys(actionDetails.get(0));
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
     public void openNewWindowHandles() {
         parent = driver.getWindowHandle();

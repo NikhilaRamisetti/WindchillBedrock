@@ -46,13 +46,12 @@ public class ManageWindchillPart {
 
     }
 
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","Credentials.xlsx","Sheet1");
-    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestData.xlsx","Sheet1");
+    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Part_Creation");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
-    String DefaultPart = "Test Part1";
-    String DefaultPartVersion= "A.3";
+    java.util.List<String> DemoPartDetails= excelReader.getRowData(1,0);
 
     
     public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
@@ -145,39 +144,42 @@ public class ManageWindchillPart {
         logger = extent.startTest("Creating a Part");
         viewProductFoldersPage();
         implicitWait(10);
-        for(int i=1;i<excelReader.getRowCount(); i++) {
-            List<String> PartDetails= excelReader.getRowData(i,0);
-            String PartName = new String(PartDetails.get(0));
-            System.out.println(PartName);
-            Thread.sleep(2000);
-            driver.findElement(By.xpath("//div[@id='folderbrowser_PDM.toolBar']//button[text()='Actions']")).click();
-            driver.findElement(By.xpath("//span[text()='New']")).click();
-            driver.findElement(By.xpath("//span[text()='New Part']")).click();
-            Thread.sleep(2000);
-            String parent = driver.getWindowHandle();
-            Set<String> windows = driver.getWindowHandles();
-            System.out.println(windows);
-            for (String window : windows) {
-                driver.switchTo().window(window);
-                System.out.println(driver.switchTo().window(window).getTitle());
-                if (driver.getTitle().contains("New Part")) {
-                    implicitWait(10);
-                    driver.findElement(By.xpath("//select[@id='!~objectHandle~partHandle~!createType']")).click();
-                    implicitWait(2);
-                    driver.findElement(By.xpath("//option[text()=' Part ']")).click();
-                    implicitWait(10);
-                    Thread.sleep(5000);
-                    driver.findElement(By.xpath("//td[@attrid='name']/input[1]")).sendKeys(PartName);
-                    Thread.sleep(2000);
-                    driver.findElement(By.xpath("//button[@accesskey='f']")).click();
-                    Thread.sleep(5000);
-                    System.out.println("Part created successfully");
+        try {
+            for (int i = 1; i < excelReader.getRowCount(); i++) {
+                List<String> PartDetails = excelReader.getRowData(i, 0);
+                String PartName = new String(PartDetails.get(0));
+                Thread.sleep(2000);
+                driver.findElement(By.xpath("//div[@id='folderbrowser_PDM.toolBar']//button[text()='Actions']")).click();
+                driver.findElement(By.xpath("//span[text()='New']")).click();
+                driver.findElement(By.xpath("//span[text()='New Part']")).click();
+                Thread.sleep(2000);
+                String parent = driver.getWindowHandle();
+                Set<String> windows = driver.getWindowHandles();
+                for (String window : windows) {
+                    driver.switchTo().window(window);
+                    if (driver.getTitle().contains("New Part")) {
+                        implicitWait(10);
+                        driver.findElement(By.xpath("//select[@id='!~objectHandle~partHandle~!createType']")).click();
+                        implicitWait(2);
+                        driver.findElement(By.xpath("//option[text()=' Part ']")).click();
+                        implicitWait(10);
+                        Thread.sleep(5000);
+                        driver.findElement(By.xpath("//td[@attrid='name']/input[1]")).sendKeys(PartName);
+                        Thread.sleep(2000);
+                        driver.findElement(By.xpath("//button[@accesskey='f']")).click();
+                        Thread.sleep(5000);
+                        System.out.println("Part created successfully");
+                    }
                 }
+                driver.switchTo().window(parent);
+                Thread.sleep(2000);
             }
-            driver.switchTo().window(parent);
-            Thread.sleep(2000);
+            logger.log(LogStatus.PASS, "Test Case is Passed");
         }
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
 
     @Test(priority=3)
@@ -186,11 +188,17 @@ public class ManageWindchillPart {
         viewProductFoldersPage();
         implicitWait(10);
         Thread.sleep(2000);
-        ViewPartInfoPage(DefaultPart);
-        System.out.println(driver.findElement(By.xpath("//div[@id='dataStoreGeneral']")).getText());
-        implicitWait(2);
-        System.out.println("Part Information retrieved successfully");
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        ViewPartInfoPage(DemoPartDetails.get(0));
+        try {
+            System.out.println(driver.findElement(By.xpath("//div[@id='dataStoreGeneral']")).getText());
+            implicitWait(2);
+            System.out.println("Part Information retrieved successfully");
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
 
     @Test(priority = 4)
@@ -200,50 +208,61 @@ public class ManageWindchillPart {
         viewProductFoldersPage();
         implicitWait(10);
         Thread.sleep(2000);
-        ViewPartInfoPage(DefaultPart);
-        driver.findElement(By.xpath("//button[text()='Actions']")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//span[text()='Delete']")).click();
-        Thread.sleep(2000);
-        String parent=driver.getWindowHandle();
-        Set<String> windows = driver.getWindowHandles();
-        System.out.println(windows);
-        for (String window : windows) {
-            driver.switchTo().window(window);
-            System.out.println(driver.switchTo().window(window).getTitle());
-            if (driver.getTitle().contains("Delete")) {
-                implicitWait(10);
-                driver.findElement(By.xpath("//button[@accesskey='o']")).click();
+        ViewPartInfoPage(DemoPartDetails.get(0));
+        try {
+            driver.findElement(By.xpath("//button[text()='Actions']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//span[text()='Delete']")).click();
+            Thread.sleep(2000);
+            String parent = driver.getWindowHandle();
+            Set<String> windows = driver.getWindowHandles();
+            for (String window : windows) {
+                driver.switchTo().window(window);
+                if (driver.getTitle().contains("Delete")) {
+                    implicitWait(10);
+                    driver.findElement(By.xpath("//div[@class='x-grid3-row-checker']")).click();
+                    driver.findElement(By.xpath("//button[@accesskey='o']")).click();
+                }
             }
+            driver.switchTo().window(parent);
+            Thread.sleep(2000);
+            System.out.println("Part deleted successfully");
+            logger.log(LogStatus.PASS, "Test Case is Passed");
         }
-        driver.switchTo().window(parent);
-        Thread.sleep(2000);
-        System.out.println("Part deleted successfully");
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
 
     public void viewProductFoldersPage(){
         implicitWait(15);
-        driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
+        try {
+            driver.findElement(By.xpath("//a[@id='object_main_navigation_nav']")).click();
 //        implicitWait(5);
 //        driver.findElement(By.xpath("//li[@id='navigatorTabPanel__object_main_navigation']")).click();
-        implicitWait(5);
-        //driver.findElement(By.id("ext-gen169")).click();
-        implicitWait(5);
-        if(driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() !=0) {
-            driver.findElement(By.xpath("//span[text()='Sample Product1']")).click();
             implicitWait(5);
+            //driver.findElement(By.id("ext-gen169")).click();
+            implicitWait(5);
+            if (driver.findElements(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).size() != 0) {
+                driver.findElement(By.xpath("//span[text()='"+DemoPartDetails.get(3)+"']")).click();
+                implicitWait(5);
+            }
+            driver.findElement(By.xpath("//span[text()='Folders']")).click();
         }
-        driver.findElement(By.xpath("//span[text()='Folders']")).click();
+        catch(Exception e){
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
         implicitWait(20);
     }
 
     public void ViewPartInfoPage(String Part){
         String partName = Part;
         try {
-            List<WebElement> Parts= driver.findElements(By.xpath("//td//a(text(),'" + partName + "')]"));
+            List<WebElement> Parts= driver.findElements(By.xpath("//td//a[contains(text(),'" + partName + "')]"));
             for(WebElement part: Parts) {
-                if(driver.findElements(By.xpath("//td//a[contains(text(),'" + partName + "')]/../../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-version ']//div[contains(text(),'" + DefaultPartVersion + "')]")).size() !=0){
+                if(driver.findElements(By.xpath("//td//a[contains(text(),'" + partName + "')]/../../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-version ']//div[contains(text(),'" + DemoPartDetails.get(1) + "')]")).size() !=0){
                     part.click();
                 }
                 else{
