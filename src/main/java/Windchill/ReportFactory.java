@@ -34,7 +34,7 @@ public class ReportFactory {
         extent
                 .addSystemInfo("Host Name", "Windchill")
                 .addSystemInfo("Environment", "Bedrock")
-                .addSystemInfo("User Name", "Nikhila");
+                .addSystemInfo("User Name", "User");
          extent.loadConfig(new File(UserDirectory+"/extent-config.xml"));
         return extent;
     }

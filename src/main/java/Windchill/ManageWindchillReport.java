@@ -3,8 +3,10 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.ITestResult;
@@ -15,8 +17,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +38,7 @@ public class ManageWindchillReport {
     }
 
     @BeforeSuite
-    public synchronized void initiatereader() throws IOException {
+    public synchronized void initiateReader() throws IOException {
         System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
 
     }
@@ -49,22 +49,14 @@ public class ManageWindchillReport {
     ExtentTest logger;
     List<String> DemoReportDetails = excelReader.getRowData(1, 0);
 
-    public static String getScreenshot(WebDriver driver, String screenshotName, String FolderName) throws Exception {
-        String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-        TakesScreenshot ts = (TakesScreenshot) driver;
-        File source = ts.getScreenshotAs(OutputType.FILE);
-        String destination = Root + FolderName + screenshotName + dateName + ".png";
-        File finalDestination = new File(destination);
-        FileUtils.copyFile(source, finalDestination);
-        return destination;
-    }
+
 
     @BeforeClass
     public void Prerequisite() throws IOException {
         extent = ReportFactory.getInstance();
     }
     @BeforeTest
-    public void initializebrowser() {
+    public void initializeBrowser() {
         driver = new ChromeDriver();
         driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
@@ -76,19 +68,19 @@ public class ManageWindchillReport {
     @Test(priority = 1)
     public void LaunchWindchillBrowser() throws InterruptedException, AWTException {
         logger = extent.startTest("Launching Windchill Browser");
-        driver.get("http://windchilltest.accenture.com:81/Windchill/app");
+        driver.get("http://windchilltest.accenture.com:81/Windchill/app");//GettingURL
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Thread.sleep(2000);
         Robot rb = new Robot();
-        java.util.List<String> cred1= credentialsReader.getRowData(1,0);
-        StringSelection str = new StringSelection(cred1.get(0));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
+        List<String> cred1= credentialsReader.getRowData(1,0);
+        StringSelection userName = new StringSelection(cred1.get(0));//reading username from excel
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(userName, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
         Thread.sleep(2000);
         rb.keyPress(KeyEvent.VK_TAB);
-        StringSelection str1 = new StringSelection(cred1.get(1));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str1, null);
+        StringSelection password = new StringSelection(cred1.get(1));//reading password from excel
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(password, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
         Thread.sleep(2000);
@@ -99,15 +91,16 @@ public class ManageWindchillReport {
     @Test(priority=2)
     public void createReport() throws InterruptedException {
         logger = extent.startTest("Creating a Report");
-        commonFunctions.viewProductMenuSection("Utilities", driver, DemoReportDetails.get(0));
+        commonFunctions.viewProductMenuSection("Utilities", driver, DemoReportDetails.get(0));//open products menu section
         Thread.sleep(2000);
         try {
             driver.findElement(By.xpath("//a[contains(text(),'Report Management')]")).click();
             Thread.sleep(2000);
             driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
             Thread.sleep(2000);
+            //switch to query builder window
             if (commonFunctions.openNewWindowHandles("Query Builder", driver)) {
-                implicitWait(10);
+                implicitWait(10);//Add report constraints
                 driver.findElement(By.xpath("//input[@id='reportTemplateName']")).click();
                 driver.findElement(By.xpath("//input[@id='reportTemplateName']")).sendKeys(DemoReportDetails.get(1));
                 implicitWait(10);
@@ -170,7 +163,7 @@ public class ManageWindchillReport {
                 JavascriptExecutor jse = (JavascriptExecutor) driver;
                 jse.executeScript("window.confirm('Please click on generate');");
                 Thread.sleep(2000);
-                getScreenshot(driver, "Change_Notice_Log", "/Screenshots/");
+                commonFunctions.getScreenshot(driver, "Change_Notice_Log", "/Screenshots/", Root);//save the report as screenshot
                 Thread.sleep(2000);
                 driver.close();
                 commonFunctions.closeWindowHandle(driver, parent);
@@ -219,7 +212,7 @@ public class ManageWindchillReport {
             Actions actions = new Actions(driver);
             WebElement elementLocator = driver.findElement(By.xpath("//a[contains(text(),'Change Notice Log')]"));
             actions.contextClick(elementLocator).perform();
-            driver.findElement(By.xpath("//span[text()='Export Report']")).click();
+            driver.findElement(By.xpath("//span[text()='Export Report']")).click();//export report as zip file to local
             Thread.sleep(2000);
             logger.log(LogStatus.PASS, "Test Case is Passed");
         }
@@ -233,7 +226,7 @@ public class ManageWindchillReport {
     }
 
     @AfterTest
-    public void closebrowser() {
+    public void closeBrowser() {
         if (driver != null) {
             driver.close();
             driver.quit();
@@ -245,7 +238,7 @@ public class ManageWindchillReport {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/");
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/", Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
