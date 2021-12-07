@@ -88,6 +88,7 @@ public class ManageWindchillReport {
         System.out.println("Success: Launched Windchill Browser");
         logger.log(LogStatus.PASS, "Test Case is Passed");
     }
+
     @Test(priority=2)
     public void createReport() throws InterruptedException {
         logger = extent.startTest("Creating a Report");
@@ -98,6 +99,7 @@ public class ManageWindchillReport {
             Thread.sleep(2000);
             driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/report_template_new.png\");']")).click();
             Thread.sleep(2000);
+            parent = driver.getWindowHandle();
             //switch to query builder window
             if (commonFunctions.openNewWindowHandles("Query Builder", driver)) {
                 implicitWait(10);//Add report constraints
@@ -140,7 +142,6 @@ public class ManageWindchillReport {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
         }
-
     @Test(priority=3)
     public void ViewReport() throws Exception {
         logger = extent.startTest("View Report");
@@ -152,6 +153,7 @@ public class ManageWindchillReport {
             implicitWait(10);
             driver.findElement(By.xpath("//a[text()='Change Notice Log']")).click();
             Thread.sleep(2000);
+            parent = driver.getWindowHandle();
             if (commonFunctions.openNewWindowHandles("View Change Notice Log",driver)) {
                 Thread.sleep(2000);
                 driver.findElement(By.xpath("//button[text()='Generate']")).click();
