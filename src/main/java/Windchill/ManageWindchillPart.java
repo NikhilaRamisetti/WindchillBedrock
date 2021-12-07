@@ -154,7 +154,6 @@ public class ManageWindchillPart {
                         Thread.sleep(5000);
                         System.out.println("Part created successfully");
                     }
-                driver.close();
                 commonFunctions.closeWindowHandle(driver, parent);
                 Thread.sleep(2000);
             }

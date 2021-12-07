@@ -94,7 +94,7 @@ public class ContentFileManagement {
             for (int i = 1; i < excelReader.getRowCount(); i++) {
                 java.util.List<String> contentDetails = excelReader.getRowData(i, 0);
                 //Primary document details
-                driver.findElement(By.xpath("//a[text()='" + contentDetails.get(0) + "']")).click();
+                driver.findElement(By.xpath("//a[text()='" + contentDetails.get(1) + "']")).click();
                 Thread.sleep(2000);
                 implicitWait(10);
                 driver.findElement(By.xpath("//span[text()='Content']")).click();
@@ -103,19 +103,20 @@ public class ContentFileManagement {
                 driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/edit.gif\");']")).click();
                 Thread.sleep(5000);
                 implicitWait(10);
+                parent = driver.getWindowHandle();
                 //switch to edit window from parent window
                 if (commonFunctions.openNewWindowHandles("Edit",driver)) {
-                    if (contentDetails.get(4).equalsIgnoreCase("Local File")) {
+                    if (contentDetails.get(5).equalsIgnoreCase("Local File")) {
                         driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-file-generic_attach.gif\");']")).click();
-                    } else if (contentDetails.get(4).equalsIgnoreCase("URL Link")) {
+                    } else if (contentDetails.get(5).equalsIgnoreCase("URL Link")) {
                         driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-url_attach.gif\");']")).click();
-                    } else if (contentDetails.get(4).equalsIgnoreCase("External storage")) {
+                    } else if (contentDetails.get(5).equalsIgnoreCase("External storage")) {
                         driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-external_attach.gif\");']")).click();
                     } else {
                         logger.log(LogStatus.ERROR, "Type of document doesnt exist");
                     }
-                    driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentName']//input[1]")).sendKeys(contentDetails.get(5));
-                    driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentLocation']//input[1]")).sendKeys(contentDetails.get(6));
+                    driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentName']//input[1]")).sendKeys(contentDetails.get(6));
+                    driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-contentLocation']//input[1]")).sendKeys(contentDetails.get(7));
                     Thread.sleep(2000);
                     driver.findElement(By.xpath("//button[@accesskey='s']")).click();
                     Thread.sleep(2000);
@@ -160,17 +161,17 @@ public class ContentFileManagement {
             driver.findElement(By.xpath("//button[text()='Actions']")).click();
             if (driver.findElement(By.xpath("//span[text()='Replace Content']")).isEnabled()) {
                 driver.findElement(By.xpath("//span[text()='Replace Content']")).click();
+                parent = driver.getWindowHandle();
                 if (commonFunctions.openNewWindowHandles("Replace Content", driver)) {
                     documentContentSelection();//select the type of document(local file, External file, URL link)
                     commonFunctions.closeWindowHandle(driver, parent);
+                    logger.log(LogStatus.PASS, "Test Case is Passed");
                 } else {
                     logger.log(LogStatus.ERROR, "Window Not Found");
                 }
             } else {
                 logger.log(LogStatus.ERROR, "Document is checked out, please check In for Replacing content");
             }
-
-            logger.log(LogStatus.PASS, "Test Case is Passed");
         }
         catch(Exception e){
             System.out.println(e.getLocalizedMessage());
@@ -186,6 +187,7 @@ public class ContentFileManagement {
             driver.findElement(By.xpath("//button[text()='Actions']")).click();
             if (DemoContentDetails.get(10).equalsIgnoreCase("CheckIn")) {
                 if (driver.findElement(By.xpath("//span[text()='Check In']")).isEnabled()) {
+                    parent = driver.getWindowHandle();
                     if (commonFunctions.openNewWindowHandles("Checking In Document", driver)) {
                         documentContentSelection();//select the type of document(local file, External file, URL link)
                         commonFunctions.closeWindowHandle(driver, parent);
@@ -195,7 +197,7 @@ public class ContentFileManagement {
                 } else {
                     logger.log(LogStatus.ERROR, "Document already checked In, Please check out manually and try again");
                 }
-            } else if (DemoContentDetails.get(10).equalsIgnoreCase("CheckOut")) {
+            } else if (DemoContentDetails.get(11).equalsIgnoreCase("CheckOut")) {
                 if (driver.findElement(By.xpath("//span[text()='Check Out']")).isEnabled()) {
                     driver.findElement(By.xpath("//span[text()='Check Out']")).click();
                     Thread.sleep(2000);
@@ -213,22 +215,22 @@ public class ContentFileManagement {
     public void documentContentSelection() throws InterruptedException {
         try {
             driver.findElement(By.xpath("//select[@id='primary0contentSourceList']")).click();
-            if (DemoContentDetails.get(7).equalsIgnoreCase("Local File")) {
+            if (DemoContentDetails.get(8).equalsIgnoreCase("Local File")) {
                 driver.findElement(By.xpath("//option[@id='primary0contentSourceList_FILE']")).click();
                 driver.findElement(By.xpath("//input[@id='keep_existing_primary_file']")).click();
                 Thread.sleep(2000);
                 driver.findElement(By.xpath("//button[@accesskey='o']")).click();
-            } else if (DemoContentDetails.get(7).equalsIgnoreCase("URL Link")) {
+            } else if (DemoContentDetails.get(8).equalsIgnoreCase("URL Link")) {
                 driver.findElement(By.xpath("//option[@id='primary0contentSourceList_URL']")).click();
-                driver.findElement(By.xpath("//input[@id='primaryUrlLocationTextBox']")).sendKeys(DemoContentDetails.get(9));
-                driver.findElement(By.xpath("//input[@id='primaryUrlNameTextBox']")).sendKeys(DemoContentDetails.get(8));
+                driver.findElement(By.xpath("//input[@id='primaryUrlLocationTextBox']")).sendKeys(DemoContentDetails.get(10));
+                driver.findElement(By.xpath("//input[@id='primaryUrlNameTextBox']")).sendKeys(DemoContentDetails.get(9));
                 Thread.sleep(2000);
                 driver.findElement(By.xpath("//button[@accesskey='o']")).click();
                 Thread.sleep(2000);
-            } else if (DemoContentDetails.get(7).equalsIgnoreCase("External storage")) {
+            } else if (DemoContentDetails.get(8).equalsIgnoreCase("External storage")) {
                 driver.findElement(By.xpath("//option[@id='primary0contentSourceList_EXTERNAL']")).click();
-                driver.findElement(By.xpath("//textarea[@id='primaryExternalLocationTextArea']")).sendKeys(DemoContentDetails.get(9));
-                driver.findElement(By.xpath("//textarea[@id='primaryExternalNameTextBox']")).sendKeys(DemoContentDetails.get(8));
+                driver.findElement(By.xpath("//textarea[@id='primaryExternalLocationTextArea']")).sendKeys(DemoContentDetails.get(10));
+                driver.findElement(By.xpath("//textarea[@id='primaryExternalNameTextBox']")).sendKeys(DemoContentDetails.get(9));
                 Thread.sleep(2000);
                 driver.findElement(By.xpath("//button[@accesskey='o']")).click();
                 Thread.sleep(2000);
@@ -244,7 +246,7 @@ public class ContentFileManagement {
     public void contentActionsClick() throws InterruptedException {
         try {
             Thread.sleep(5000);
-            driver.findElement(By.xpath("//a[text()='" + DemoContentDetails.get(0) + "']")).click();
+            driver.findElement(By.xpath("//a[text()='" + DemoContentDetails.get(1) + "']")).click();
             Thread.sleep(2000);
             implicitWait(10);
             driver.findElement(By.xpath("//span[text()='Content']")).click();
