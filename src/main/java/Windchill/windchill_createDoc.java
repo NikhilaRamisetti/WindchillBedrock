@@ -1,5 +1,6 @@
 package Windchill;
 
+//import WebAppExample.ExcelReader;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
@@ -17,11 +18,24 @@ import org.testng.annotations.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class windchill_createDoc {
+    private static File directory =  new File("");
+    private static String Root;
+
+    static {
+        try {
+            Root = directory.getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @BeforeSuite
     public synchronized void initiatereader() {
         //ExcelReader excelReader = ExcelReader.getInstance("C:\\Program Files (x86)\\Accenture\\IXO\\Bedrock\\WebApplicationTestData", "TestData.xlsx", "Sheet2",
@@ -30,7 +44,8 @@ public class windchill_createDoc {
 
     }
 
-
+    static ExcelReader globalSettings;
+    private static ExcelReader excelReader;
     WebDriver driver;
     ExtentTest logger;
     ExtentReports extent;
@@ -38,7 +53,7 @@ public class windchill_createDoc {
 
 
     @BeforeClass
-    public void Prerequisite() {
+    public void Prerequisite() throws IOException {
         extent = ReportFactory.getInstance();
     }
 
@@ -55,62 +70,77 @@ public class windchill_createDoc {
     @Test(priority = 0)
     public void LaunchWebClient() throws InterruptedException, AWTException {
         logger = extent.startTest("LaunchWebClient");
-        driver.get("http://windchilltest.accenture.com:81/Windchill/app");
-        Thread.sleep(2000);
-        Robot rb = new Robot();
-        StringSelection str = new StringSelection("testuser1");
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
-        rb.keyPress(KeyEvent.VK_CONTROL);
-        rb.keyPress(KeyEvent.VK_V); // press Contol+V for pasting
-        rb.keyRelease(KeyEvent.VK_CONTROL);
-        rb.keyRelease(KeyEvent.VK_V);// release Contol+V for pasting
-        Thread.sleep(2000);
-        rb.keyPress(KeyEvent.VK_TAB);
-        StringSelection str1 = new StringSelection("123");
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str1, null);
-        rb.keyPress(KeyEvent.VK_CONTROL);
-        rb.keyPress(KeyEvent.VK_V); // press Contol+V for pasting
-        rb.keyRelease(KeyEvent.VK_CONTROL);
-        rb.keyRelease(KeyEvent.VK_V);// release Contol+V for pasting
-        Thread.sleep(2000);
-        rb.keyPress(KeyEvent.VK_ENTER);
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        try {
+            driver.get("http://windchilltest.accenture.com:82/Windchill/app");
+            Thread.sleep(2000);
+            Robot rb = new Robot();
+            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Credentials");
+            List<String> excelData = credentialsReader.getRowData(3, 0);
+            String USERNAME = excelData.get(0);
+            String PASSWORD = excelData.get(1);
+            StringSelection str = new StringSelection(USERNAME);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
+            rb.keyPress(KeyEvent.VK_CONTROL);
+            rb.keyPress(KeyEvent.VK_V); // press Contol+V for pasting
+            rb.keyRelease(KeyEvent.VK_CONTROL);
+            rb.keyRelease(KeyEvent.VK_V);// release Contol+V for pasting
+            Thread.sleep(2000);
+            rb.keyPress(KeyEvent.VK_TAB);
+            StringSelection str1 = new StringSelection(PASSWORD);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str1, null);
+            rb.keyPress(KeyEvent.VK_CONTROL);
+            rb.keyPress(KeyEvent.VK_V); // press Contol+V for pasting
+            rb.keyRelease(KeyEvent.VK_CONTROL);
+            rb.keyRelease(KeyEvent.VK_V);// release Contol+V for pasting
+            Thread.sleep(2000);
+            rb.keyPress(KeyEvent.VK_ENTER);
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        }
+        catch(Exception e){
+                System.out.println(e.getLocalizedMessage());
+                logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+            }
     }
 
     @Test(priority = 2)
     public void createDoc() throws InterruptedException {
         logger = extent.startTest("createDoc");
-        WebDriverWait wait = new WebDriverWait(driver, 30);
-        Thread.sleep(3000);
-        driver.findElement(By.xpath("//div[@class='x-tool x-tool-expand-west']")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("navigatorTabPanel__object_main_navigation")).click();
-        driver.findElement(By.xpath("//span[@class='x-tab-strip-text productNavigation-icon']")).click();
-        driver.findElement(By.xpath("//a[text()='View All']")).click();
-        Thread.sleep(3000);
-        driver.findElement(By.xpath("//a[text()='newProduct']")).click();
-        Thread.sleep(4000);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='folderbrowser_PDM.toolBar']//button[text()='Actions']"))).click();
-        driver.findElement(By.xpath("//span[text()='New']")).click();
-        driver.findElement(By.xpath("//span[text()='New Document']")).click();
-        Set<String> winHandles = driver.getWindowHandles();
-        ArrayList<String> list = new ArrayList<>(winHandles);
-        driver.switchTo().window(list.get(1));
-        Thread.sleep(4000);
-        Select type = new Select(driver.findElement(By.id("createType")));
-        type.selectByVisibleText("Document");
-        Thread.sleep(2000);
-        Select temp = new Select(driver.findElement(By.id("templatesCombo")));
-        temp.selectByVisibleText("Requirements Template");
-        Thread.sleep(3000);
-        driver.findElement(By.xpath("//td[@attrid='name']/input[1]")).sendKeys("newDocument2");
-        WebElement auto = driver.findElement(By.name("tcomp$attributesTable$OR:wt.pdmlink.PDMLinkProduct:98715$___Location_col_overrideFolder___radio"));
-        auto.click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("ext-gen37")).click();
-        Thread.sleep(2000);
-        driver.findElement(By.id("ext-gen39")).click();
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 30);
+            Thread.sleep(3000);
+            driver.findElement(By.xpath("//div[@class='x-tool x-tool-expand-west']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.id("navigatorTabPanel__object_main_navigation")).click();
+            driver.findElement(By.xpath("//span[@class='x-tab-strip-text productNavigation-icon']")).click();
+            driver.findElement(By.xpath("//a[text()='View All']")).click();
+            Thread.sleep(3000);
+            driver.findElement(By.xpath("//a[text()='product2']")).click();//select view all>product 2
+            Thread.sleep(4000);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='folderbrowser_PDM.toolBar']//button[text()='Actions']"))).click();
+            driver.findElement(By.xpath("//span[text()='New']")).click();
+            driver.findElement(By.xpath("//span[text()='New Document']")).click();//select new>new documnet
+            Set<String> winHandles = driver.getWindowHandles();
+            ArrayList<String> list = new ArrayList<>(winHandles);
+            driver.switchTo().window(list.get(1));
+            Thread.sleep(4000);
+            Select type = new Select(driver.findElement(By.id("createType")));//select the dropdown createtype
+            type.selectByVisibleText("Document");
+            Thread.sleep(2000);
+            Select temp = new Select(driver.findElement(By.id("templatesCombo")));//select the template
+            temp.selectByVisibleText("Requirements Template");
+            Thread.sleep(3000);
+            driver.findElement(By.xpath("//td[@attrid='name']/input[1]")).sendKeys("newDocument2");
+            WebElement auto = driver.findElement(By.name("tcomp$attributesTable$OR:wt.pdmlink.PDMLinkProduct:98715$___Location_col_overrideFolder___radio"));
+            auto.click();
+            Thread.sleep(2000);
+            driver.findElement(By.id("ext-gen37")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.id("ext-gen39")).click();
+            logger.log(LogStatus.PASS, "Test Case is Passed");
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage());
+            logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+        }
     }
 
     @AfterMethod

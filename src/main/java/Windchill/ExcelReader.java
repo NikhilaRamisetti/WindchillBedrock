@@ -60,7 +60,7 @@ public class ExcelReader {
         return new ExcelReader(filePath, fileName, sheetName);
     }*/
 
-    public static Windchill.ExcelReader getInstance(String filePath, String fileName, String sheetName) {
+    public static Windchill.ExcelReader getInstance(String path, String filePath, String fileName, String sheetName) {
         Windchill.ExcelReader excelReader = new Windchill.ExcelReader(filePath, fileName, sheetName);
         return excelReader;
     }

@@ -42,8 +42,8 @@ public class ManageWindchillReport {
         System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
 
     }
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
-    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","ReportsManagement");
+    ExcelReader credentialsReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","ReportsManagement");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;

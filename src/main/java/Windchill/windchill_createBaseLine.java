@@ -8,8 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -24,8 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class windchill_createProd {
-
+public class windchill_createBaseLine {
     private static File directory =  new File("");
     private static String Root;
 
@@ -40,23 +37,21 @@ public class windchill_createProd {
     public synchronized void initiatereader() {
         //ExcelReader excelReader = ExcelReader.getInstance("C:\\Program Files (x86)\\Accenture\\IXO\\Bedrock\\WebApplicationTestData", "TestData.xlsx", "Sheet2",
         // "Test");
-        System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Accenture\\IX0\\Bedrock\\SetupFiles\\chromedriver\\chromedriver_win32\\chromedriver.exe");
 
     }
 
 
-    static ExcelReader globalSettings;
-    private static ExcelReader excelReader;
     WebDriver driver;
     ExtentTest logger;
     ExtentReports extent;
     String patternPath = System.getProperty("user.dir") + "\\PixelGraphics\\";
 
 
-    @BeforeClass
-    public void Prerequisite() throws IOException {
-        extent = ReportFactory.getInstance();
-    }
+//    @BeforeClass
+//    public void Prerequisite() {
+//        extent = ReportFactory.getInstance();
+//    }
 
     @BeforeTest
     public void initializebrowser() {
@@ -69,14 +64,14 @@ public class windchill_createProd {
     }
 
     @Test(priority = 0)
-    public void LaunchWebClient() throws  Exception {
-        logger = extent.startTest("LaunchWebClient");
-        Thread.sleep(2000);
+    public void LaunchWebClient() throws InterruptedException, AWTException {
+       // logger = extent.startTest("LaunchWebClient");
         driver.get("http://windchilltest.accenture.com:82/Windchill/app");
+        Thread.sleep(2000);
         ExcelReader credentialsReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
         List<String> excelData=credentialsReader.getRowData(3,0);
-      String USERNAME=excelData.get(0);
-      String PASSWORD=excelData.get(1);
+        String USERNAME=excelData.get(0);
+        String PASSWORD=excelData.get(1);
         Robot rb = new Robot();
         StringSelection str = new StringSelection(USERNAME);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
@@ -94,53 +89,53 @@ public class windchill_createProd {
         rb.keyRelease(KeyEvent.VK_V);// release Contol+V for pasting
         Thread.sleep(2000);
         rb.keyPress(KeyEvent.VK_ENTER);
-        logger.log(LogStatus.PASS, "Test Case is Passed");
+       // logger.log(LogStatus.PASS, "Test Case is Passed");
     }
-
-
-    @Test(priority = 1)
-    public void  createProduct() throws InterruptedException {
+    @Test(priority=1)
+    public void CreateBL() throws InterruptedException{
         WebDriverWait wait = new WebDriverWait(driver, 30);
-        logger = extent.startTest("CreateProduct");
+        logger = extent.startTest("CreateBaseLine");
 
         try {
-
-
-            //span[contains(class, 'class')]
-            // wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("x-tool x-tool-close"))).click();
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='x-tool x-tool-expand-west']"))).click();
-            //driver.findElement(By.xpath("//div[@class='x-tool x-tool-expand-west']")).click();
+            driver.findElement(By.xpath("//div[@class='x-tool x-tool-expand-west']")).click();
             Thread.sleep(2000);
             driver.findElement(By.id("navigatorTabPanel__object_main_navigation")).click();
-            driver.findElement(By.xpath("//span[@class='x-tab-strip-text productNavigation-icon']")).click();
-            driver.findElement(By.xpath("//a[text()='View All']")).click();
-            // driver.findElement(By.className("//td[@class='x-btn-mc/button']")).click();
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class=' x-btn-text blist']"))).click();
+            Thread.sleep(3000);
+            driver.findElement(By.xpath("//img[@class='x-tree-ec-icon x-tree-elbow-plus']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//span[text()='Details']")).click();
+            Thread.sleep(4000);
+            driver.findElement(By.xpath("//button[text()='Actions']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//span[text()='New']")).click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//span[text()='New Baseline']")).click();//select actions>new >new baseline
             Set<String> winHandles = driver.getWindowHandles();
             ArrayList<String> list = new ArrayList<>(winHandles);
-            driver.switchTo().window(list.get(1));//switch to different window
-            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Product_Creation");
+            driver.switchTo().window(list.get(1));
+            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "BaseLine_Creation");
             List<String> excelData = credentialsReader.getRowData(1, 0);
-            String ProductName = excelData.get(0);//fetch the data from excel
-            String ProductDesrptn = excelData.get(1);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td[@attrid='containerInfo.name']/input[1]"))).sendKeys(ProductName);//send the product name from excel
-            Select temp = new Select(driver.findElement(By.name("tcomp$attributesTable$$___templateRef___combobox")));
+            String BaseLineName = excelData.get(0);
+            String BaseLineDesrptn = excelData.get(1);
+            driver.findElement(By.name("tcomp$attributesTable$OR:wt.pdmlink.PDMLinkProduct:101406$___name_col_name___textbox")).sendKeys(BaseLineName);//send name from the excel
             Thread.sleep(2000);
-            temp.selectByVisibleText("General Product");//select the template dropdown
-            driver.findElement(By.id("containerInfo.description")).sendKeys(ProductDesrptn);//enter the product description from excel
-
-            WebElement yes = driver.findElement(By.name("tcomp$attributesTable$$___pdmlinkContainerPrivateAccess_col_pdmlinkContainerPrivateAccess___com.ptc.core.components.rendering.renderers.RadioButtonGroupRendererGROUP_ID-166259175___radio"));
-            yes.click(); //select the dropdown
-            driver.findElement(By.id("ext-gen39")).click();
+            driver.findElement(By.id("description")).sendKeys(BaseLineDesrptn);//send the baseline description from excel
+            Thread.sleep(2000);
+            WebElement lockNo = driver.findElement(By.name("tcomp$attributesTable$OR:wt.pdmlink.PDMLinkProduct:101406$___lock___radio"));//select lockno
+            lockNo.click();
+            WebElement auto = driver.findElement(By.name("tcomp$attributesTable$OR:wt.pdmlink.PDMLinkProduct:101406$___Location_col_overrideFolder___radio"));//select the folder path
+            auto.click();
+            Thread.sleep(2000);
+            driver.findElement(By.xpath("//button[@accesskey='o']")).click();
             logger.log(LogStatus.PASS, "Test Case is Passed");
 
-        } catch (Exception e) {
+        }
+        catch(Exception e){
             System.out.println(e.getLocalizedMessage());
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
+
     }
-
-
     @AfterMethod
     public void getResult(ITestResult result) throws Exception {
         if (result.getStatus() == ITestResult.FAILURE) {
@@ -159,9 +154,3 @@ public class windchill_createProd {
         extent.flush();
     }
 }
-
-
-
-
-
-
