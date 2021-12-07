@@ -3,8 +3,9 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -14,8 +15,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class ContentFileManagement {
@@ -36,7 +36,7 @@ public class ContentFileManagement {
     }
 
     @BeforeSuite
-    public synchronized void initiatereader() throws IOException {
+    public synchronized void initiateReader() throws IOException {
         System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
 
     }
@@ -48,24 +48,12 @@ public class ContentFileManagement {
     ExtentTest logger;
     java.util.List<String> DemoContentDetails = excelReader.getRowData(1, 0);
 
-
-
-    public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
-        String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-        TakesScreenshot ts = (TakesScreenshot) driver;
-        File source = ts.getScreenshotAs(OutputType.FILE);
-        String destination = Root + "/FailedTestsScreenshots/" + screenshotName + dateName + ".png";
-        File finalDestination = new File(destination);
-        FileUtils.copyFile(source, finalDestination);
-        return destination;
-    }
-
     @BeforeClass
     public void Prerequisite() throws IOException {
         extent = ReportFactory.getInstance();
     }
     @BeforeTest
-    public void initializebrowser() {
+    public void initializeBrowser() {
         driver = new ChromeDriver();
         driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
@@ -77,19 +65,19 @@ public class ContentFileManagement {
     @Test(priority = 1)
     public void LaunchWindchillBrowser() throws InterruptedException, AWTException {
         logger = extent.startTest("Launching Windchill Browser");
-        driver.get("http://windchilltest.accenture.com:81/Windchill/app");
+        driver.get("http://windchilltest.accenture.com:81/Windchill/app");//GettingURL
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Thread.sleep(2000);
         Robot rb = new Robot();
-        java.util.List<String> cred1= credentialsReader.getRowData(1,0);
-        StringSelection str = new StringSelection(cred1.get(0));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
+        List<String> cred1= credentialsReader.getRowData(1,0);
+        StringSelection userName = new StringSelection(cred1.get(0));//reading username from excel
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(userName, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
         Thread.sleep(2000);
         rb.keyPress(KeyEvent.VK_TAB);
-        StringSelection str1 = new StringSelection(cred1.get(1));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str1, null);
+        StringSelection password = new StringSelection(cred1.get(1));//reading password from excel
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(password, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
         Thread.sleep(2000);
@@ -115,6 +103,7 @@ public class ContentFileManagement {
                 driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/edit.gif\");']")).click();
                 Thread.sleep(5000);
                 implicitWait(10);
+                //switch to edit window from parent window
                 if (commonFunctions.openNewWindowHandles("Edit",driver)) {
                     if (contentDetails.get(4).equalsIgnoreCase("Local File")) {
                         driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/content-file-generic_attach.gif\");']")).click();
@@ -150,10 +139,10 @@ public class ContentFileManagement {
         try{
             contentActionsClick();
             //Download primary content file
-        driver.findElement(By.xpath("//img[@src='http://windchilltest.accenture.com:81/Windchill/netmarkets/images/file_msword.gif']")).click();
-        Thread.sleep(2000);
-        //Download secondary content file
-        //driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-attachmentsName']/a[2]")).click();
+            driver.findElement(By.xpath("//img[@src='http://windchilltest.accenture.com:81/Windchill/netmarkets/images/file_msword.gif']")).click();
+            Thread.sleep(2000);
+            //Download secondary content file
+            //driver.findElement(By.xpath("//div[@class='x-grid3-cell-inner x-grid3-col-attachmentsName']/a[2]")).click();
         }
         catch (Exception n){
             System.out.println(n.getLocalizedMessage());
@@ -172,7 +161,7 @@ public class ContentFileManagement {
             if (driver.findElement(By.xpath("//span[text()='Replace Content']")).isEnabled()) {
                 driver.findElement(By.xpath("//span[text()='Replace Content']")).click();
                 if (commonFunctions.openNewWindowHandles("Replace Content", driver)) {
-                    documentEditor();
+                    documentContentSelection();//select the type of document(local file, External file, URL link)
                     commonFunctions.closeWindowHandle(driver, parent);
                 } else {
                     logger.log(LogStatus.ERROR, "Window Not Found");
@@ -198,7 +187,7 @@ public class ContentFileManagement {
             if (DemoContentDetails.get(10).equalsIgnoreCase("CheckIn")) {
                 if (driver.findElement(By.xpath("//span[text()='Check In']")).isEnabled()) {
                     if (commonFunctions.openNewWindowHandles("Checking In Document", driver)) {
-                        documentEditor();
+                        documentContentSelection();//select the type of document(local file, External file, URL link)
                         commonFunctions.closeWindowHandle(driver, parent);
                     } else {
                         logger.log(LogStatus.ERROR, "Window Not Found");
@@ -221,7 +210,7 @@ public class ContentFileManagement {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
     }
-    public void documentEditor() throws InterruptedException {
+    public void documentContentSelection() throws InterruptedException {
         try {
             driver.findElement(By.xpath("//select[@id='primary0contentSourceList']")).click();
             if (DemoContentDetails.get(7).equalsIgnoreCase("Local File")) {
@@ -286,7 +275,7 @@ public class ContentFileManagement {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(),"/FailedTestsScreenshots/",Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());

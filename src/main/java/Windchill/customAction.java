@@ -3,10 +3,7 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
@@ -17,8 +14,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -39,7 +35,7 @@ public class customAction {
     }
 
     @BeforeSuite
-    public synchronized void initiatereader() throws IOException {
+    public synchronized void initiateReader() throws IOException {
         System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");
 
     }
@@ -53,22 +49,12 @@ public class customAction {
     //String DefaultPart = "Test Part1";
 
 
-    public static String getScreenshot(WebDriver driver, String screenshotName) throws Exception {
-        String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
-        TakesScreenshot ts = (TakesScreenshot) driver;
-        File source = ts.getScreenshotAs(OutputType.FILE);
-        String destination = Root + "/FailedTestsScreenshots/" + screenshotName + dateName + ".png";
-        File finalDestination = new File(destination);
-        FileUtils.copyFile(source, finalDestination);
-        return destination;
-    }
-
     @BeforeClass
     public void Prerequisite() throws IOException {
         extent = ReportFactory.getInstance();
     }
     @BeforeTest
-    public void initializebrowser() {
+    public void initializeBrowser() {
         driver = new ChromeDriver();
         driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
@@ -80,19 +66,19 @@ public class customAction {
     @Test(priority = 1)
     public void LaunchWindchillBrowser() throws InterruptedException, AWTException {
         logger = extent.startTest("Launching Windchill Browser");
-        driver.get("http://windchilltest.accenture.com:81/Windchill/app");
+        driver.get("http://windchilltest.accenture.com:81/Windchill/app");//GettingURL
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Thread.sleep(2000);
         Robot rb = new Robot();
-        java.util.List<String> cred1= credentialsReader.getRowData(2,0);
-        StringSelection str = new StringSelection(cred1.get(0));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str, null);
+        List<String> cred1= credentialsReader.getRowData(1,0);
+        StringSelection userName = new StringSelection(cred1.get(0));//reading username from excel
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(userName, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
         Thread.sleep(2000);
         rb.keyPress(KeyEvent.VK_TAB);
-        StringSelection str1 = new StringSelection(cred1.get(1));
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(str1, null);
+        StringSelection password = new StringSelection(cred1.get(1));//reading password from excel
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(password, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
         Thread.sleep(2000);
@@ -107,18 +93,19 @@ public class customAction {
         Thread.sleep(2000);
         try {
             driver.findElement(By.xpath("//button[text()='Search']")).click();
-            driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName=folderbrowser_toolbar_new_submenu']//img")).click();
+            //passing the action model name parameter
+            driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName="+actionDetails.get(0)+"']//img")).click();
             driver.findElement(By.xpath("//button[text()='Actions']")).click();
             driver.findElement(By.xpath("//span[text()='Create Action']")).click();
             Thread.sleep(2000);
             openNewWindowHandles();
             implicitWait(10);
             driver.findElement(By.xpath("//input[@id='description']")).click();
-            driver.findElement(By.xpath("//input[@id='description']")).sendKeys(actionDetails.get(1));
+            driver.findElement(By.xpath("//input[@id='description']")).sendKeys(actionDetails.get(1));//Passing the Action label parameter
             implicitWait(10);
-            driver.findElement(By.xpath("//input[@id='name']")).sendKeys(actionDetails.get(2));
+            driver.findElement(By.xpath("//input[@id='name']")).sendKeys(actionDetails.get(2));//Passing the Action name parameter
             implicitWait(10);
-            driver.findElement(By.xpath("//input[@id='objectType']")).sendKeys(actionDetails.get(3));
+            driver.findElement(By.xpath("//input[@id='objectType']")).sendKeys(actionDetails.get(3));//Passing the object type parameter
             Thread.sleep(2000);
             driver.findElement(By.xpath("//button[@accesskey='f']")).click();
             commonFunctions.closeWindowHandle(driver, parent);
@@ -138,7 +125,7 @@ public class customAction {
         try {
             driver.findElement(By.xpath("//button[text()='Search']")).click();
             Thread.sleep(2000);
-            driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName=folderbrowser_toolbar_new_submenu']//img")).click();
+            driver.findElement(By.xpath("//a[@href='ptc1/carambola/tools/actionReport/actionModelDetails?actionModelName="+actionDetails.get(0)+"']//img")).click();
             Thread.sleep(2000);
             driver.findElement(By.xpath("//div[contains(text(),'" + actionDetails.get(1) + "')]/../preceding-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-checker x-grid3-cell-first ']//div[@class='x-grid3-row-checker']")).click();
             driver.findElement(By.xpath("//button[text()='Actions']")).click();
@@ -179,16 +166,12 @@ public class customAction {
             driver.switchTo().window(window);
         }
     }
-    public void closeWindowHandle() throws InterruptedException {
-        driver.switchTo().window(parent);
-        Thread.sleep(2000);
-    }
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
 
     @AfterTest
-    public void closebrowser() {
+    public void closeBrowser() {
         if (driver != null) {
             driver.close();
             driver.quit();
@@ -200,7 +183,7 @@ public class customAction {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(),"/FailedTestsScreenshots/",Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
