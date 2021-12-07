@@ -44,8 +44,8 @@ public class ManageWindchillPart {
 
     }
 
-    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
-    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Part_Creation");
+    ExcelReader credentialsReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Part_Creation");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
