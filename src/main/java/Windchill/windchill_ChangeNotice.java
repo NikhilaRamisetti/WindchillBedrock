@@ -3,7 +3,6 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import drivers.CommonAppsDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -74,7 +73,7 @@ public class windchill_ChangeNotice {
         driver.get("http://windchilltest.accenture.com:82/Windchill/app");
         Thread.sleep(2000);
         Robot rb = new Robot();
-        ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Credentials");
+        ExcelReader credentialsReader = ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Credentials");
         List<String> excelData = credentialsReader.getRowData(3, 0);
         String USERNAME = excelData.get(0);
         String PASSWORD = excelData.get(1);
@@ -148,7 +147,7 @@ public class windchill_ChangeNotice {
             Select template = new Select(driver.findElement(By.id("ChangeObjectTemplatePicker")));//change notice template
             template.selectByIndex(0);
             Thread.sleep(4000);
-            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "ChangeNotice");
+            ExcelReader credentialsReader = ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "ChangeNotice");
             List<String> excelData = credentialsReader.getRowData(1, 0);
             System.out.println(excelData);
             String CNname = excelData.get(0);
@@ -172,7 +171,7 @@ public class windchill_ChangeNotice {
 
         try {
             driver.findElement(By.cssSelector("button[style='background-image: url(\"netmarkets/images/task_create.gif\");']"));//change task creation
-            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "ChangeNotice");
+            ExcelReader credentialsReader = ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "ChangeNotice");
             List<String> excelData = credentialsReader.getRowData(1, 0);
             String CTname = excelData.get(1);
             String approver = excelData.get(2);
@@ -247,14 +246,13 @@ public class windchill_ChangeNotice {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/", Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
         }
         extent.endTest(logger);
     }
-
     @AfterClass
     public void endReport() {
         extent.flush();
