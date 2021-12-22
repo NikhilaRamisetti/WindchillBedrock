@@ -4,7 +4,6 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import drivers.CommonAppsDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -148,7 +147,7 @@ public class windchill_createDoc {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/", Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
