@@ -68,10 +68,10 @@ public class ReportFactory {
                 //System.out.println(filecreationdatetime);
                 String lastEks = file.getName().toString();
                 StringBuilder b = new StringBuilder(lastEks);
-                String foldername=replaceString.substring(0,10);
+                String folderName=replaceString.substring(0,10);
                 //System.out.println("lasteks :"+lastEks);
                 //System.out.println("sb :"+b);
-                String ReportArchivePath=UserDirectory + "/ReportArchive/" + foldername;
+                String ReportArchivePath=UserDirectory + "/ReportArchive/" + folderName;
                 File ReportArchivePath1 = new File(ReportArchivePath);
                 if (!ReportArchivePath1.exists()) {
                    //System.out.print("No Folder");

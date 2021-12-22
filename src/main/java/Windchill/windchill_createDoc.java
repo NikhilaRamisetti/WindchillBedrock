@@ -4,7 +4,6 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import drivers.CommonAppsDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -74,7 +73,7 @@ public class windchill_createDoc {
             driver.get("http://windchilltest.accenture.com:82/Windchill/app");
             Thread.sleep(2000);
             Robot rb = new Robot();
-            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Credentials");
+            ExcelReader credentialsReader = ExcelReader.getInstance( Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Credentials");
             List<String> excelData = credentialsReader.getRowData(3, 0);
             String USERNAME = excelData.get(0);
             String PASSWORD = excelData.get(1);
@@ -148,7 +147,7 @@ public class windchill_createDoc {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/", Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());

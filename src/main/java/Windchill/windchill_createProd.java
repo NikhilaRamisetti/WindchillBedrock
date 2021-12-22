@@ -3,7 +3,6 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
-import drivers.CommonAppsDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -73,7 +72,7 @@ public class windchill_createProd {
         logger = extent.startTest("LaunchWebClient");
         Thread.sleep(2000);
         driver.get("http://windchilltest.accenture.com:82/Windchill/app");
-        ExcelReader credentialsReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+        ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
         List<String> excelData=credentialsReader.getRowData(3,0);
       String USERNAME=excelData.get(0);
       String PASSWORD=excelData.get(1);
@@ -119,7 +118,7 @@ public class windchill_createProd {
             Set<String> winHandles = driver.getWindowHandles();
             ArrayList<String> list = new ArrayList<>(winHandles);
             driver.switchTo().window(list.get(1));//switch to different window
-            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Product_Creation");
+            ExcelReader credentialsReader = ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Product_Creation");
             List<String> excelData = credentialsReader.getRowData(1, 0);
             String ProductName = excelData.get(0);//fetch the data from excel
             String ProductDesrptn = excelData.get(1);
@@ -146,7 +145,7 @@ public class windchill_createProd {
         if (result.getStatus() == ITestResult.FAILURE) {
             logger.log(LogStatus.FAIL, "Test Case Failed is " + result.getName());
             logger.log(LogStatus.FAIL, "Reason behind the failure " + result.getThrowable());
-            String screenshotPath = CommonAppsDriver.getScreenshot(driver, result.getName());
+            String screenshotPath = commonFunctions.getScreenshot(driver, result.getName(), "/FailedTestsScreenshots/", Root);
             logger.log(LogStatus.FAIL, logger.addScreenCapture(screenshotPath));
         } else if (result.getStatus() == ITestResult.SKIP) {
             logger.log(LogStatus.SKIP, "Test Case Skipped is " + result.getName());
