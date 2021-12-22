@@ -68,7 +68,7 @@ public class windchill_createBaseLine {
        // logger = extent.startTest("LaunchWebClient");
         driver.get("http://windchilltest.accenture.com:82/Windchill/app");
         Thread.sleep(2000);
-        ExcelReader credentialsReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+        ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
         List<String> excelData=credentialsReader.getRowData(3,0);
         String USERNAME=excelData.get(0);
         String PASSWORD=excelData.get(1);
@@ -113,7 +113,7 @@ public class windchill_createBaseLine {
             Set<String> winHandles = driver.getWindowHandles();
             ArrayList<String> list = new ArrayList<>(winHandles);
             driver.switchTo().window(list.get(1));
-            ExcelReader credentialsReader = ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "BaseLine_Creation");
+            ExcelReader credentialsReader = ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "BaseLine_Creation");
             List<String> excelData = credentialsReader.getRowData(1, 0);
             String BaseLineName = excelData.get(0);
             String BaseLineDesrptn = excelData.get(1);

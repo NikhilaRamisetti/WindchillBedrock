@@ -44,8 +44,8 @@ public class ManageWindchillPart {
 
     }
 
-    ExcelReader credentialsReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
-    ExcelReader excelReader= ExcelReader.getInstance(System.getProperty("user.dir") + "/GlobalSettings", Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Part_Creation");
+    ExcelReader credentialsReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Credentials");
+    ExcelReader excelReader= ExcelReader.getInstance(Root + "\\src\\main\\java\\Windchill","TestDataInput.xlsx","Part_Creation");
     WebDriver driver;
     ExtentReports extent;
     ExtentTest logger;
@@ -175,9 +175,9 @@ public class ManageWindchillPart {
         try {
             String GeneralDetails = driver.findElement(By.xpath("//div[@id='dataStoreGeneral']")).getText();//general part info copied
             implicitWait(2);
-            logger.log(LogStatus.INFO, GeneralDetails);
+            //logger.log(LogStatus.INFO, GeneralDetails);
             System.out.println("Part Information retrieved successfully");
-            logger.log(LogStatus.PASS, "Test Case is Passed");
+            logger.log(LogStatus.PASS, GeneralDetails+"Test Case is Passed");
         }
         catch(Exception e){
             System.out.println(e.getLocalizedMessage());
