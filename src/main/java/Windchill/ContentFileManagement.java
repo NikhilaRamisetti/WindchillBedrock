@@ -6,6 +6,7 @@ import com.relevantcodes.extentreports.LogStatus;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -94,7 +95,28 @@ public class ContentFileManagement {
             for (int i = 1; i < excelReader.getRowCount(); i++) {
                 java.util.List<String> contentDetails = excelReader.getRowData(i, 0);
                 //Primary document details
-                driver.findElement(By.xpath("//a[text()='" + contentDetails.get(1) + "']")).click();
+                try {
+                    List<WebElement> Objects= driver.findElements(By.xpath("//a[text()='" + contentDetails.get(1) + "']"));
+                    for(WebElement object: Objects) {
+                        String ObjectNumber = "00000000"+contentDetails.get(12);
+                        if(driver.findElements(By.xpath("//a[contains(text(),'" +contentDetails.get(1)+ "')]/../../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-version ']//div[contains(text(),'" + contentDetails.get(13) + "')]")).size() !=0){
+                            if(driver.findElements(By.xpath("//div[contains(text(),'"+ObjectNumber+"')]/../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-name ']/div/a[contains(text(),'" +contentDetails.get(1)+ "')]")).size() !=0) {
+                                object.click();
+                            }
+                            else{
+                                logger.log(LogStatus.ERROR, "Re-Check the number of the object, It doesnt exist");
+                            }
+                        }
+                        else{
+                            logger.log(LogStatus.ERROR, "Re-Check the version of the object, It doesnt exist");
+                        }
+                    }
+                }
+                catch(Exception e){
+                    System.out.println(e.getLocalizedMessage());
+                    logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+                }
+
                 Thread.sleep(2000);
                 implicitWait(10);
                 driver.findElement(By.xpath("//span[text()='Content']")).click();
@@ -133,6 +155,7 @@ public class ContentFileManagement {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
     }
+    /*
     @Test(priority=3)
     public void downloadContent() {
         logger = extent.startTest("Download content file");
@@ -212,6 +235,8 @@ public class ContentFileManagement {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
     }
+
+     */
     public void documentContentSelection() throws InterruptedException {
         try {
             driver.findElement(By.xpath("//select[@id='primary0contentSourceList']")).click();
@@ -246,7 +271,27 @@ public class ContentFileManagement {
     public void contentActionsClick() throws InterruptedException {
         try {
             Thread.sleep(5000);
-            driver.findElement(By.xpath("//a[text()='" + DemoContentDetails.get(1) + "']")).click();
+            try {
+                List<WebElement> Objects= driver.findElements(By.xpath("//a[text()='" + DemoContentDetails.get(1) + "']"));
+                for(WebElement object: Objects) {
+                    String ObjectNumber = "00000000"+DemoContentDetails.get(12);
+                    if(driver.findElements(By.xpath("//a[contains(text(),'" +DemoContentDetails.get(1)+ "')]/../../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-version ']//div[contains(text(),'" + DemoContentDetails.get(13) + "')]")).size() !=0){
+                        if(driver.findElements(By.xpath("//div[contains(text(),'"+ObjectNumber+"')]/../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-name ']/div/a[contains(text(),'" +DemoContentDetails.get(1)+ "')]")).size() !=0) {
+                            object.click();
+                        }
+                        else{
+                            logger.log(LogStatus.ERROR, "Re-Check the number of the object, It doesnt exist");
+                        }
+                    }
+                    else{
+                        logger.log(LogStatus.ERROR, "Re-Check the version of the object, It doesnt exist");
+                    }
+                }
+            }
+            catch(Exception e){
+                System.out.println(e.getLocalizedMessage());
+                logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+            }
             Thread.sleep(2000);
             implicitWait(10);
             driver.findElement(By.xpath("//span[text()='Content']")).click();
@@ -263,7 +308,7 @@ public class ContentFileManagement {
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
-
+/*
     @AfterTest
     public void closeBrowser() {
         if (driver != null) {
@@ -271,7 +316,7 @@ public class ContentFileManagement {
             driver.quit();
         }
     }
-
+*/
     @AfterMethod
     public void getResult(ITestResult result) throws Exception {
         if (result.getStatus() == ITestResult.FAILURE) {

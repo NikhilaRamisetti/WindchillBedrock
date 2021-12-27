@@ -138,7 +138,7 @@ public class GroupCreation {
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
-
+/*
     @AfterTest
     public void closeBrowser() {
         if (driver != null) {
@@ -146,7 +146,7 @@ public class GroupCreation {
             driver.quit();
         }
     }
-
+*/
     @AfterMethod
     public void getResult(ITestResult result) throws Exception {
         if (result.getStatus() == ITestResult.FAILURE) {

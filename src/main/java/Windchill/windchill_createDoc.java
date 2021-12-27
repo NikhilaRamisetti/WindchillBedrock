@@ -36,10 +36,8 @@ public class windchill_createDoc {
         }
     }
     @BeforeSuite
-    public synchronized void initiatereader() {
-        //ExcelReader excelReader = ExcelReader.getInstance("C:\\Program Files (x86)\\Accenture\\IXO\\Bedrock\\WebApplicationTestData", "TestData.xlsx", "Sheet2",
-        // "Test");
-        System.setProperty("webdriver.chrome.driver", "C:\\Program Files\\Accenture\\IX0\\Bedrock\\SetupFiles\\chromedriver\\chromedriver_win32\\chromedriver.exe");
+    public synchronized void initiateReader() throws IOException {
+        System.setProperty("webdriver.chrome.driver", Root + "\\chromedriver_win32\\chromedriver.exe");//setting driver property
 
     }
 
@@ -70,11 +68,11 @@ public class windchill_createDoc {
     public void LaunchWebClient() throws InterruptedException, AWTException {
         logger = extent.startTest("LaunchWebClient");
         try {
-            driver.get("http://windchilltest.accenture.com:82/Windchill/app");
+            driver.get("http://windchilltest.accenture.com:81/Windchill/app");
             Thread.sleep(2000);
             Robot rb = new Robot();
             ExcelReader credentialsReader = ExcelReader.getInstance( Root + "\\src\\main\\java\\Windchill", "TestDataInput.xlsx", "Credentials");
-            List<String> excelData = credentialsReader.getRowData(3, 0);
+            List<String> excelData = credentialsReader.getRowData(2, 0);
             String USERNAME = excelData.get(0);
             String PASSWORD = excelData.get(1);
             StringSelection str = new StringSelection(USERNAME);

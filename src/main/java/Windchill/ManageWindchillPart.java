@@ -4,6 +4,7 @@ package Windchill;
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -71,8 +72,10 @@ public class ManageWindchillPart {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         Thread.sleep(2000);
         Robot rb = new Robot();
-        List<String> cred1= credentialsReader.getRowData(1,0);
+        List<String> cred1= credentialsReader.getRowData(2,0);
         StringSelection userName = new StringSelection(cred1.get(0));//reading username from excel
+        System.out.println(cred1.get(0));
+        System.out.println(cred1.get(1));
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(userName, null);
         rb.keyPress(KeyEvent.VK_CONTROL);rb.keyPress(KeyEvent.VK_V);
         rb.keyRelease(KeyEvent.VK_CONTROL);rb.keyRelease(KeyEvent.VK_V);
@@ -124,7 +127,8 @@ public class ManageWindchillPart {
         }
         driver.switchTo().window(parent);
     }
-    */
+ */
+ /*
     @Test(priority=2)
     public void createPart() throws InterruptedException {
         logger = extent.startTest("Creating a Part");//log start message
@@ -164,27 +168,34 @@ public class ManageWindchillPart {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());//log report error message
         }
     }
-
+*/
     @Test(priority=3)
-    public void GetPartInfo() throws InterruptedException {
+    public void GetPartInfo() throws InterruptedException, IOException, InvalidFormatException {
         logger = extent.startTest("Get Part Information");
+        Thread.sleep(2000);
         commonFunctions.viewProductMenuSection("Folders", driver, DemoPartDetails.get(3));
         implicitWait(10);
         Thread.sleep(2000);
         ViewPartInfoPage(DemoPartDetails.get(0));//passing the name of the part and open its info page
+        String GeneralDetails = null;
         try {
-            String GeneralDetails = driver.findElement(By.xpath("//div[@id='dataStoreGeneral']")).getText();//general part info copied
+            GeneralDetails = driver.findElement(By.xpath("//div[@id='dataStoreGeneral']")).getText();
             implicitWait(2);
             //logger.log(LogStatus.INFO, GeneralDetails);
             System.out.println("Part Information retrieved successfully");
-            logger.log(LogStatus.PASS, GeneralDetails+"Test Case is Passed");
-        }
-        catch(Exception e){
+            logger.log(LogStatus.PASS, GeneralDetails + "Test Case is Passed");
+        } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
+        OutputWrite output = new OutputWrite();
+        String fileName = output.createFileName();
+        System.out.println(fileName);
+        String[] Data = new String[]{DemoPartDetails.get(3), DemoPartDetails.get(0), GeneralDetails};
+        output.WriteFileContent(Data, 0, fileName);
     }
 
+/*
     @Test(priority = 4)
     public void deletePart() throws InterruptedException {
         logger = extent.startTest("Delete a Part");
@@ -215,7 +226,7 @@ public class ManageWindchillPart {
             logger.log(LogStatus.ERROR, e.getLocalizedMessage());
         }
     }
-
+*/
 
     public void ViewPartInfoPage(String Part){
         String partName = Part;
@@ -239,6 +250,7 @@ public class ManageWindchillPart {
     public void implicitWait(int seconds){
         driver.manage().timeouts().implicitlyWait(seconds, TimeUnit.SECONDS);
     }
+    /*
     @AfterTest
     public void closeBrowser() {
         if (driver != null) {
@@ -246,7 +258,7 @@ public class ManageWindchillPart {
             driver.quit();
         }
     }
-
+*/
     @AfterMethod
     public void getResult(ITestResult result) throws Exception {
         if (result.getStatus() == ITestResult.FAILURE) {

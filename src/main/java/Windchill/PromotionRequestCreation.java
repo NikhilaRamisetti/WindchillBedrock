@@ -5,6 +5,7 @@ import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -97,7 +98,28 @@ public class PromotionRequestCreation {
             for (int i = 1; i <= excelReader.getRowCount(); i++) {
                 List<String> ChangeRequestDetails = excelReader.getRowData(i, 0);
                 Thread.sleep(2000);
-                driver.findElement(By.xpath("//a[text()='"+ChangeRequestDetails.get(1)+"']")).click();
+                try {
+                    List<WebElement> Objects= driver.findElements(By.xpath("//a[text()='"+ChangeRequestDetails.get(1)+"']"));
+                    for(WebElement object: Objects) {
+                        String ObjectNumber = "00000000"+ChangeRequestDetails.get(2);
+                        if(driver.findElements(By.xpath("//a[contains(text(),'" +ChangeRequestDetails.get(1)+ "')]/../../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-version ']//div[contains(text(),'" + ChangeRequestDetails.get(3) + "')]")).size() !=0){
+                            if(driver.findElements(By.xpath("//div[contains(text(),'" +ChangeRequestDetails.get(2)+ "')]/../following-sibling::td[@class='x-grid3-col x-grid3-cell x-grid3-td-name ']/div/a[contains(text(),'" +ChangeRequestDetails.get(1)+ "')]")).size() !=0) {
+                                object.click();
+                            }
+                            else{
+                                logger.log(LogStatus.ERROR, "Re-Check the number of the object, It doesnt exist");
+                            }
+                        }
+                        else{
+                            logger.log(LogStatus.ERROR, "Re-Check the version of the object, It doesnt exist");
+                        }
+                    }
+                }
+                catch(Exception e){
+                    System.out.println(e.getLocalizedMessage());
+                    logger.log(LogStatus.ERROR, e.getLocalizedMessage());
+                }
+
                 Thread.sleep(1000);
                 driver.findElement(By.xpath("//button[text()='Actions']")).click();
                 driver.findElement(By.xpath("//span[text()='New']")).click();
@@ -112,7 +134,7 @@ public class PromotionRequestCreation {
                     driver.findElement(By.xpath("//button[@accesskey='n']")).click();
                     Thread.sleep(2000);
                     driver.findElement(By.xpath("//select[@id='maturityState']")).click();
-                    driver.findElement(By.xpath("//option[contains(text(),'"+ChangeRequestDetails.get(3)+"')]")).click();
+                    driver.findElement(By.xpath("//option[contains(text(),'"+ChangeRequestDetails.get(5)+"')]")).click();
                     Thread.sleep(2000);
                     driver.findElement(By.xpath("//div[@class='x-grid3-row-checker']")).click();
                     driver.findElement(By.xpath("//button[@style='background-image: url(\"netmarkets/images/defer_add.gif\");']")).click();
